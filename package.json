@@ -1,0 +1,96 @@
+{
+	"name": "@wolfstar/ring",
+	"version": "1.0.0",
+	"description": "Private centralized management android for the WolfStar Network",
+	"author": "WolfStar Project <contact@wolfstar.rocks>",
+	"license": "Apache-2.0",
+	"private": true,
+	"main": "dist/main.js",
+	"type": "module",
+	"imports": {
+		"#api/*": "./dist/api/*.js",
+		"#lib/*": "./dist/lib/*.js"
+	},
+	"scripts": {
+		"build": "tsc -b src",
+		"dev": "yarn build && yarn start",
+		"watch": "tsc -b src -w",
+		"watch:start": "tsc-watch -b src --onSuccess \"yarn start\"",
+		"prisma:generate": "yarn prisma generate",
+		"clean": "node scripts/build/clean.mjs",
+		"start": "node --enable-source-maps dist/main.js",
+		"test": "eslint --ext ts src",
+		"lint": "eslint --fix --ext ts src",
+		"format": "prettier --write --log-level=warn \"src/**/*.{js,ts,json}\"",
+		"update": "yarn upgrade-interactive"
+	},
+	"dependencies": {
+		"@discordjs/builders": "^1.8.2",
+		"@discordjs/collection": "^2.1.0",
+		"@prisma/client": "^5.17.0",
+		"@sapphire/result": "^2.6.6",
+		"@sapphire/utilities": "^3.16.2",
+		"@skyra/env-utilities": "^1.3.0",
+		"@skyra/http-framework": "^2.1.0",
+		"@skyra/http-framework-i18n": "^1.2.0",
+		"@skyra/logger": "^2.0.3",
+		"@skyra/shared-http-pieces": "^1.2.2",
+		"@skyra/start-banner": "^2.0.1",
+		"discord-api-types": "^0.37.92",
+		"fastify": "^4.28.1",
+		"gradient-string": "^2.0.2",
+		"tslib": "^2.6.3"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^19.3.0",
+		"@commitlint/config-conventional": "^19.2.2",
+		"@sapphire/eslint-config": "^5.0.5",
+		"@sapphire/prettier-config": "^2.0.0",
+		"@sapphire/ts-config": "^5.0.1",
+		"@types/gradient-string": "^1.1.6",
+		"@types/node": "^20.14.11",
+		"@typescript-eslint/eslint-plugin": "^7.13.0",
+		"@typescript-eslint/parser": "^7.13.0",
+		"cz-conventional-changelog": "^3.3.0",
+		"eslint": "^8.57.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-prettier": "^5.2.1",
+		"lint-staged": "^15.2.7",
+		"prettier": "^3.3.3",
+		"prisma": "^5.17.0",
+		"typescript": "~5.4.5"
+	},
+	"resolutions": {
+		"ansi-regex": "^5.0.1",
+		"discord-api-types": "^0.37.92",
+		"minimist": "^1.2.8"
+	},
+	"engines": {
+		"node": ">=18.0.0"
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
+	"lint-staged": {
+		"*.{mjs,js,ts}": "eslint --fix --ext mjs,js,ts"
+	},
+	"config": {
+		"commitizen": {
+			"*": "prettier --ignore-unknown --write",
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	},
+	"prettier": "@sapphire/prettier-config",
+	"eslintConfig": {
+		"extends": "@sapphire",
+		"rules": {
+			"@typescript-eslint/no-base-to-string": "off"
+		}
+	},
+	"packageManager": "yarn@4.3.1",
+	"volta": {
+		"node": "20.15.1"
+	}
+}

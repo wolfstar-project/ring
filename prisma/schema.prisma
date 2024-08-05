@@ -21,31 +21,25 @@ model Guild {
   maximumTwitchSubscriptions  Int    @default(5) @map("maximum_twitch_subscriptions") @db.SmallInt
 
   /// The maximum amount of filtered words.
-  /// @bot Skyra
+  /// @bot WolfStar
   /// @tier 100 ($5)
   /// @tier 200 ($10)
   maximumFilteredWords      Int @default(50) @map("maximum_filtered_words") @db.SmallInt
   /// The maximum amount of filtered reactions.
-  /// @bot Skyra
+  /// @bot WolfStar
   /// @tier 100 ($5)
   /// @tier 200 ($10)
   maximumFilteredReactions  Int @default(50) @map("maximum_filtered_reactions") @db.SmallInt
   /// The maximum amount of allowed links for the link filter.
-  /// @bot Skyra
+  /// @bot WolfStar
   /// @tier 50 ($5)
   /// @tier 100 ($10)
   maximumAllowedLinks       Int @default(25) @map("maximum_allowed_links") @db.SmallInt
   /// The maximum amount of allowed invite codes for the invite link filter.
-  /// @bot Skyra
+  /// @bot WolfStar
   /// @tier 50 ($5)
   /// @tier 100 ($10)
   maximumAllowedInviteCodes Int @default(25) @map("maximum_allowed_invite_codes") @db.SmallInt
-
-  /// The maximum amount of tags.
-  /// @bot Teryl
-  /// @tier 100 ($3)
-  /// @tier 200 ($10)
-  maximumTagCount Int @default(50) @map("maximum_tag_count") @db.SmallInt
 
   @@map("guild")
 }

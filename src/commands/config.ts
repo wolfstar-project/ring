@@ -31,8 +31,7 @@ export class UserCommand extends Command {
 			`${bold('Maximum Filtered Words       ')}: ${formatRange(data.maximumFilteredWords, 50, 200)}`,
 			`${bold('Maximum Filtered Reactions   ')}: ${formatRange(data.maximumFilteredReactions, 50, 200)}`,
 			`${bold('Maximum Allowed Links        ')}: ${formatRange(data.maximumAllowedLinks, 25, 100)}`,
-			`${bold('Maximum Allowed Invite Codes ')}: ${formatRange(data.maximumAllowedInviteCodes, 25, 100)}`,
-			`${bold('Maximum Tag Count            ')}: ${formatRange(data.maximumTagCount, 50, 200)}`
+			`${bold('Maximum Allowed Invite Codes ')}: ${formatRange(data.maximumAllowedInviteCodes, 25, 100)}`
 		];
 		return interaction.reply({ content: codeBlock('ansi', lines.join('\n')), flags: MessageFlags.Ephemeral });
 	}
@@ -42,13 +41,12 @@ export class UserCommand extends Command {
 			.setName('set')
 			.setDescription("Updates a guild's features")
 			.addStringOption(getGuildOption)
-			.addIntegerOption(getIntegerOption(3, 10, 'maximum-youtube-subscriptions', '(Acrysel) The maximum amount of YouTube subscriptions'))
-			.addIntegerOption(getIntegerOption(5, 20, 'maximum-twitch-subscriptions', '(Acrysel) The maximum amount of Twitch subscriptions'))
-			.addIntegerOption(getIntegerOption(50, 200, 'maximum-filtered-words', '(Skyra) The maximum amount of filtered words'))
-			.addIntegerOption(getIntegerOption(50, 200, 'maximum-filtered-reactions', '(Skyra) The maximum amount of filtered reactions'))
-			.addIntegerOption(getIntegerOption(25, 100, 'maximum-allowed-links', '(Skyra) The maximum amount of allowed links'))
-			.addIntegerOption(getIntegerOption(25, 100, 'maximum-allowed-invite-codes', '(Skyra) The maximum amount of allowed invite codes'))
-			.addIntegerOption(getIntegerOption(50, 200, 'maximum-tag-count', '(Teryl) The maximum amount of tags'))
+			.addIntegerOption(getIntegerOption(3, 10, 'maximum-youtube-subscriptions', '(Staryl) The maximum amount of YouTube subscriptions'))
+			.addIntegerOption(getIntegerOption(5, 20, 'maximum-twitch-subscriptions', '(Staryl) The maximum amount of Twitch subscriptions'))
+			.addIntegerOption(getIntegerOption(50, 200, 'maximum-filtered-words', '(WolfStar) The maximum amount of filtered words'))
+			.addIntegerOption(getIntegerOption(50, 200, 'maximum-filtered-reactions', '(WolfStar) The maximum amount of filtered reactions'))
+			.addIntegerOption(getIntegerOption(25, 100, 'maximum-allowed-links', '(WolfStar) The maximum amount of allowed links'))
+			.addIntegerOption(getIntegerOption(25, 100, 'maximum-allowed-invite-codes', '(WolfStar) The maximum amount of allowed invite codes'))
 	)
 	public async set(interaction: Command.ChatInputInteraction, options: SetOptions) {
 		if (!UserCommand.ClientOwners.includes(interaction.user.id)) {
@@ -62,8 +60,7 @@ export class UserCommand extends Command {
 			maximumFilteredWords: options['maximum-filtered-words'],
 			maximumFilteredReactions: options['maximum-filtered-reactions'],
 			maximumAllowedLinks: options['maximum-allowed-links'],
-			maximumAllowedInviteCodes: options['maximum-allowed-invite-codes'],
-			maximumTagCount: options['maximum-tag-count']
+			maximumAllowedInviteCodes: options['maximum-allowed-invite-codes']
 		};
 		try {
 			await this.container.prisma.guild.upsert({
@@ -107,7 +104,6 @@ interface SetOptions extends Options {
 	'maximum-filtered-reactions'?: number;
 	'maximum-allowed-links'?: number;
 	'maximum-allowed-invite-codes'?: number;
-	'maximum-tag-count'?: number;
 }
 
 function getGuildOption() {

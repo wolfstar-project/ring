@@ -18,8 +18,7 @@ declare module '@skyra/env-utilities' {
 
 		CLIENT_OWNERS: ArrayString;
 
-		INTERNAL_API_ACRYSEL_TOKEN: string;
-		INTERNAL_API_SKYRA_TOKEN: string;
-		INTERNAL_API_TERYL_TOKEN: string;
+		INTERNAL_API_STARYL_TOKEN: string;
+		INTERNAL_API_WOLFSTAR_TOKEN: string;
 	}
 }

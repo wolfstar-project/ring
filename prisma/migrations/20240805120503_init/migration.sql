@@ -7,7 +7,6 @@ CREATE TABLE "guild" (
     "maximum_filtered_reactions" SMALLINT NOT NULL DEFAULT 50,
     "maximum_allowed_links" SMALLINT NOT NULL DEFAULT 25,
     "maximum_allowed_invite_codes" SMALLINT NOT NULL DEFAULT 25,
-    "maximum_tag_count" SMALLINT NOT NULL DEFAULT 50,
 
     CONSTRAINT "guild_pkey" PRIMARY KEY ("id")
 );

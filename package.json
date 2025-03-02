@@ -48,7 +48,7 @@
 		"@sapphire/prettier-config": "^2.0.0",
 		"@sapphire/ts-config": "^5.0.1",
 		"@types/gradient-string": "^1.1.6",
-		"@types/node": "^20.17.19",
+		"@types/node": "^20.17.22",
 		"@typescript-eslint/eslint-plugin": "^7.13.0",
 		"@typescript-eslint/parser": "^7.13.0",
 		"cz-conventional-changelog": "^3.3.0",
@@ -89,7 +89,7 @@
 			"@typescript-eslint/no-base-to-string": "off"
 		}
 	},
-	"packageManager": "yarn@4.6.0",
+	"packageManager": "yarn@4.7.0",
 	"volta": {
 		"node": "20.18.3"
 	}

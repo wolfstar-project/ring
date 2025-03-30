@@ -37,7 +37,7 @@
 		"@skyra/shared-http-pieces": "^1.2.2",
 		"@skyra/start-banner": "^2.0.1",
 		"discord-api-types": "^0.37.100",
-		"fastify": "^5.2.1",
+		"fastify": "^5.2.2",
 		"gradient-string": "^2.0.2",
 		"tslib": "^2.8.1"
 	},
@@ -48,13 +48,13 @@
 		"@sapphire/prettier-config": "^2.0.0",
 		"@sapphire/ts-config": "^5.0.1",
 		"@types/gradient-string": "^1.1.6",
-		"@types/node": "^22.13.11",
+		"@types/node": "^22.13.14",
 		"@typescript-eslint/eslint-plugin": "^7.13.0",
 		"@typescript-eslint/parser": "^7.13.0",
 		"cz-conventional-changelog": "^3.3.0",
 		"eslint": "^8.57.1",
 		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-prettier": "^5.2.3",
+		"eslint-plugin-prettier": "^5.2.5",
 		"lint-staged": "^15.5.0",
 		"prettier": "^3.5.3",
 		"prisma": "^5.22.0",
@@ -89,7 +89,7 @@
 			"@typescript-eslint/no-base-to-string": "off"
 		}
 	},
-	"packageManager": "yarn@4.7.0",
+	"packageManager": "yarn@4.8.0",
 	"volta": {
 		"node": "22.14.0"
 	}

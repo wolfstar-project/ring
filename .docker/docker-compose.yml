@@ -22,7 +22,7 @@ services:
     env_file:
       - ../src/.env
       - ../src/.env.development.local
-    image: 'ghcr.io/skyra-project/ring:latest'
+    image: 'ghcr.io/wolfstar-project/ring:latest'
     ports:
       - '8282:8282'
       - '7282:7282'

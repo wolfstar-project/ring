@@ -31,4 +31,4 @@ jobs:
         with:
           push: true
           context: .
-          tags: ghcr.io/skyra-project/ring:latest
+          tags: ghcr.io/wolfstar-project/ring:latest

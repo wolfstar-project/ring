@@ -13,9 +13,9 @@
 	},
 	"scripts": {
 	    "build": "tsdown",
-		"dev": "pnpm build --onSuccess \"pnpm start\"",
+		"dev": "pnpm build && pnpm start",
 		"watch": "pnpm build --watch",
-		"watch:start": "pnpm build --onSuccess \"pnpm start\"",
+		"watch:start": "pnpm build && pnpm start",
 		"prisma:generate": "pnpm prisma generate",
 		"clean": "node scripts/build/clean.mjs",
 		"start": "node --enable-source-maps dist/main.mjs",

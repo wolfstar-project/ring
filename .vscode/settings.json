@@ -14,5 +14,5 @@
 		"**/dist/": true,
 		"**/.git/": true
 	},
-	"prisma.pinToPrisma6": true,
+	"prisma.pinToPrisma6": true
 }

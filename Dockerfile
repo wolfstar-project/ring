@@ -56,6 +56,9 @@ COPY --chown=node:node --from=builder /usr/src/app/src/.env src/.env
 
 RUN pnpm install --prod --frozen-lockfile --offline
 
+# Patch .prisma with the built files
+COPY --chown=node:node --from=builder /usr/src/app/node_modules/.prisma node_modules/.prisma
+
 USER node
 
 CMD [ "pnpm", "run", "start" ]

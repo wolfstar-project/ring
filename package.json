@@ -12,7 +12,7 @@
 		"#lib/*": "./dist/lib/*.mjs"
 	},
 	"scripts": {
-	    "build": "tsdown",
+		"build": "tsdown",
 		"dev": "pnpm build --onSuccess \"pnpm start\"",
 		"watch": "pnpm build --watch",
 		"watch:start": "pnpm build --onSuccess \"pnpm start\"",
@@ -28,12 +28,12 @@
 		"@discordjs/builders": "^1.10.1",
 		"@discordjs/collection": "^2.1.1",
 		"@prisma/client": "^6.8.2",
+
 		"@sapphire/result": "^2.7.2",
 		"@sapphire/utilities": "^3.18.2",
 		"@skyra/env-utilities": "^2.0.1",
 		"@skyra/http-framework": "^2.2.0",
 		"@skyra/http-framework-i18n": "^1.2.0",
-		"@rollup/plugin-alias": "^6.0.0",
 		"@skyra/logger": "^2.0.3",
 		"@skyra/shared-http-pieces": "^1.2.2",
 		"@skyra/start-banner": "^2.0.1",
@@ -60,7 +60,9 @@
 		"lint-staged": "^16.1.0",
 		"prettier": "^3.5.3",
 		"prisma": "^6.8.2",
+		"taze": "^19.9.2",
 		"tsdown": "^0.17.2",
+		"@rollup/plugin-alias": "^6.0.0",
 		"typescript": "~5.4.5"
 	},
 	"pnpm": {

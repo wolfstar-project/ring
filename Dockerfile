@@ -54,7 +54,8 @@ COPY --chown=node:node --from=builder /usr/src/app/src/.env src/.env
 RUN yarn workspaces focus --all --production
 
 # Patch .prisma with the built files
-COPY --chown=node:node --from=builder /usr/src/app/node_modules/.prisma node_modules/.prisma
+COPY --chown=node:node --from=builder /usr/src/app/node_modules/@prisma/client ./node_modules/@prisma/client
+COPY --chown=node:node --from=builder /usr/src/app/node_modules/.pnpm/@prisma+client* ./node_modules/.pnpm/
 
 USER node
 

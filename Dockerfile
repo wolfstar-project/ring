@@ -1,40 +1,40 @@
 # ================ #
-#    Base Stage    #
+#   Base Stage     #
 # ================ #
 
-FROM node:22-alpine as base
+FROM node:22-alpine AS base
 
 WORKDIR /usr/src/app
 
-ENV YARN_DISABLE_GIT_HOOKS=1
-ENV CI=true
-ENV LOG_LEVEL=info
-ENV FORCE_COLOR=true
+ENV CI="true"
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
 RUN apk add --no-cache dumb-init
+RUN corepack enable && corepack prepare pnpm@10.22.0 --activate
 
-COPY --chown=node:node yarn.lock .
+COPY --chown=node:node pnpm-lock.yaml .
 COPY --chown=node:node package.json .
-COPY --chown=node:node .yarnrc.yml .
-COPY --chown=node:node .yarn/ .yarn/
+COPY --chown=node:node .npmrc .
 
 ENTRYPOINT ["dumb-init", "--"]
 
 # ================ #
-#   Builder Stage  #
+#   Builder Stage   #
 # ================ #
 
-FROM base as builder
+FROM base AS builder
 
 ENV NODE_ENV="development"
 
-COPY --chown=node:node tsconfig.base.json .
 COPY --chown=node:node prisma/ prisma/
 COPY --chown=node:node src/ src/
+COPY --chown=node:node tsconfig.base.json tsconfig.base.json
+COPY --chown=node:node tsdown.config.ts tsdown.config.ts
 
-RUN yarn install --immutable
-RUN yarn run prisma:generate
-RUN yarn run build
+RUN pnpm install --frozen-lockfile \
+	&& pnpm run prisma:generate \
+	&& pnpm run build
 
 # ================ #
 #   Runner Stage   #
@@ -49,9 +49,10 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node --from=builder /usr/src/app/dist dist
 COPY --chown=node:node --from=builder /usr/src/app/src/locales src/locales
+COPY --chown=node:node --from=builder /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /usr/src/app/src/.env src/.env
 
-RUN yarn workspaces focus --all --production
+RUN pnpm install --prod --frozen-lockfile --offline
 
 # Patch .prisma with the built files
 COPY --chown=node:node --from=builder /usr/src/app/node_modules/@prisma/client ./node_modules/@prisma/client
@@ -59,4 +60,4 @@ COPY --chown=node:node --from=builder /usr/src/app/node_modules/.pnpm/@prisma+cl
 
 USER node
 
-CMD [ "yarn", "run", "start" ]
+CMD [ "pnpm", "run", "start" ]

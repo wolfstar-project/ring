@@ -5,29 +5,30 @@
 	"author": "WolfStar Project <contact@wolfstar.rocks>",
 	"license": "Apache-2.0",
 	"private": true,
-	"main": "dist/main.js",
+	"main": "dist/main.mjs",
 	"type": "module",
 	"imports": {
-		"#api/*": "./dist/api/*.js",
-		"#lib/*": "./dist/lib/*.js"
+		"#api/*": "./dist/api/*.mjs",
+		"#lib/*": "./dist/lib/*.mjs"
 	},
 	"scripts": {
-		"build": "tsc -b src",
-		"dev": "yarn build && yarn start",
-		"watch": "tsc -b src -w",
-		"watch:start": "tsc-watch -b src --onSuccess \"yarn start\"",
-		"prisma:generate": "yarn prisma generate",
+		"build": "tsdown",
+		"dev": "pnpm build --onSuccess \"pnpm start\"",
+		"watch": "pnpm build --watch",
+		"watch:start": "pnpm build --onSuccess \"pnpm start\"",
+		"prisma:generate": "pnpm prisma generate",
 		"clean": "node scripts/build/clean.mjs",
-		"start": "node --enable-source-maps dist/main.js",
+		"start": "node --enable-source-maps dist/main.mjs",
 		"test": "eslint --ext ts src",
 		"lint": "eslint --fix --ext ts src",
-		"format": "prettier --write --log-level=warn \"src/**/*.{js,ts,json}\"",
-		"update": "yarn upgrade-interactive"
+		"format": "prettier --write --log-level=warn \"src/**/*.{mjs,ts,json}\"",
+		"prepare": "husky"
 	},
 	"dependencies": {
 		"@discordjs/builders": "^1.10.1",
 		"@discordjs/collection": "^2.1.1",
 		"@prisma/client": "^6.8.2",
+
 		"@sapphire/result": "^2.7.2",
 		"@sapphire/utilities": "^3.18.2",
 		"@skyra/env-utilities": "^2.0.1",
@@ -39,6 +40,7 @@
 		"discord-api-types": "^0.37.100",
 		"fastify": "^5.3.0",
 		"gradient-string": "^3.0.0",
+		"husky": "^9.1.7",
 		"tslib": "^2.8.1"
 	},
 	"devDependencies": {
@@ -58,15 +60,29 @@
 		"lint-staged": "^16.1.0",
 		"prettier": "^3.5.3",
 		"prisma": "^6.8.2",
+		"taze": "^19.9.2",
+		"tsdown": "^0.17.2",
+		"@rollup/plugin-alias": "^6.0.0",
 		"typescript": "~5.4.5"
 	},
-	"resolutions": {
-		"ansi-regex": "^5.0.1",
-		"discord-api-types": "^0.37.100",
-		"minimist": "^1.2.8"
+	"pnpm": {
+		"overrides": {
+			"ansi-regex": "^5.0.1",
+			"discord-api-types": "^0.37.100",
+			"minimist": "^1.2.8"
+		},
+		"allowedDeprecatedVersions": {
+			"eslint": "8.57.1"
+		},
+		"onlyBuiltDependencies": [
+			"@prisma/client",
+			"@prisma/engines",
+			"prisma"
+		]
 	},
 	"engines": {
-		"node": ">=18.0.0"
+		"node": ">=18",
+		"pnpm": ">=10"
 	},
 	"commitlint": {
 		"extends": [
@@ -89,7 +105,7 @@
 			"@typescript-eslint/no-base-to-string": "off"
 		}
 	},
-	"packageManager": "yarn@4.9.0",
+	"packageManager": "pnpm@10.24.0",
 	"volta": {
 		"node": "22.14.0"
 	}

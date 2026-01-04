@@ -12,6 +12,7 @@ on:
       - 'package.json'
 permissions:
   contents: read
+  packages: write
 
 env:
   HUSKY: 0

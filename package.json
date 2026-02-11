@@ -25,43 +25,43 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@discordjs/builders": "^1.10.1",
+		"@discordjs/builders": "^1.13.1",
 		"@discordjs/collection": "^2.1.1",
-		"@prisma/client": "^6.8.2",
+		"@prisma/client": "^6.19.2",
 
-		"@sapphire/result": "^2.7.2",
+		"@sapphire/result": "^2.8.0",
 		"@sapphire/utilities": "^3.18.2",
 		"@skyra/env-utilities": "^2.0.1",
-		"@skyra/http-framework": "^2.2.0",
-		"@skyra/http-framework-i18n": "^1.2.0",
-		"@skyra/logger": "^2.0.3",
-		"@skyra/shared-http-pieces": "^1.2.2",
-		"@skyra/start-banner": "^2.0.1",
+		"@skyra/http-framework": "^2.2.1",
+		"@skyra/http-framework-i18n": "^1.2.1",
+		"@skyra/logger": "^2.0.4",
+		"@skyra/shared-http-pieces": "^1.2.3",
+		"@skyra/start-banner": "^2.0.2",
 		"discord-api-types": "^0.37.100",
-		"fastify": "^5.3.0",
+		"fastify": "^5.7.4",
 		"gradient-string": "^3.0.0",
 		"husky": "^9.1.7",
 		"tslib": "^2.8.1"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^19.8.0",
-		"@commitlint/config-conventional": "^19.8.0",
-		"@sapphire/eslint-config": "^5.0.5",
+		"@commitlint/cli": "^19.8.1",
+		"@commitlint/config-conventional": "^19.8.1",
+		"@sapphire/eslint-config": "^5.0.6",
 		"@sapphire/prettier-config": "^2.0.0",
-		"@sapphire/ts-config": "^5.0.1",
+		"@sapphire/ts-config": "^5.0.3",
 		"@types/gradient-string": "^1.1.6",
-		"@types/node": "^22.14.1",
+		"@types/node": "^22.19.11",
 		"@typescript-eslint/eslint-plugin": "^7.13.0",
 		"@typescript-eslint/parser": "^7.13.0",
 		"cz-conventional-changelog": "^3.3.0",
 		"eslint": "^8.57.1",
-		"eslint-config-prettier": "^10.1.5",
-		"eslint-plugin-prettier": "^5.2.6",
-		"lint-staged": "^16.1.0",
-		"prettier": "^3.5.3",
-		"prisma": "^6.8.2",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-prettier": "^5.5.5",
+		"lint-staged": "^16.2.7",
+		"prettier": "^3.8.1",
+		"prisma": "^6.19.2",
 		"taze": "^19.9.2",
-		"tsdown": "^0.17.2",
+		"tsdown": "^0.20.3",
 		"@rollup/plugin-alias": "^6.0.0",
 		"typescript": "~5.4.5"
 	},
@@ -105,8 +105,8 @@
 			"@typescript-eslint/no-base-to-string": "off"
 		}
 	},
-	"packageManager": "pnpm@10.24.0",
+	"packageManager": "pnpm@10.29.3",
 	"volta": {
-		"node": "22.14.0"
+		"node": "22.22.0"
 	}
 }

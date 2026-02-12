@@ -28,7 +28,7 @@ jobs:
         with:
           run_install: false
       - name: Use Node.js v22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -58,7 +58,7 @@ jobs:
         with:
           run_install: false
       - name: Use Node.js v22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm

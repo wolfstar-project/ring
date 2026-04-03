@@ -10,4 +10,4 @@ permissions:
 
 jobs:
   label_sync:
-    uses: sapphiredev/.github/.github/workflows/reusable-labelsync.yml@main
+    uses: wolfstar-project/.github/.github/workflows/reusable-labelsync.yml@main

@@ -30,17 +30,17 @@
 
 ## Naming Conventions
 
-| Type             | Convention      | Example                                        |
-| ---------------- | --------------- | ---------------------------------------------- |
-| Directories      | kebab-case      | `api/routes/`                                  |
-| TypeScript files | camelCase       | `config.ts`                                    |
-| Variables        | camelCase       | `guildId`, `mappings`                          |
-| Constants        | PascalCase enum | `Mappings.staryl`                              |
-| Path constants   | PascalCase      | `PathRoot`, `PathSrc`                          |
-| Types/Interfaces | PascalCase      | `Guild`, `SetOptions`                          |
-| Classes          | PascalCase      | `UserCommand`                                  |
-| Enum members     | PascalCase      | `PermissionFlagsBits.Administrator`            |
-| Private methods  | `#`-prefixed    | `this.#validate()`                             |
+| Type             | Convention      | Example                             |
+| ---------------- | --------------- | ----------------------------------- |
+| Directories      | kebab-case      | `api/routes/`                       |
+| TypeScript files | camelCase       | `config.ts`                         |
+| Variables        | camelCase       | `guildId`, `mappings`               |
+| Constants        | PascalCase enum | `Mappings.staryl`                   |
+| Path constants   | PascalCase      | `PathRoot`, `PathSrc`               |
+| Types/Interfaces | PascalCase      | `Guild`, `SetOptions`               |
+| Classes          | PascalCase      | `UserCommand`                       |
+| Enum members     | PascalCase      | `PermissionFlagsBits.Administrator` |
+| Private methods  | `#`-prefixed    | `this.#validate()`                  |
 
 ## Import Conventions
 
@@ -61,8 +61,8 @@
   authenticated via bearer tokens
 - **Database**: PostgreSQL with Prisma ORM. Models use `@@map()` for snake_case
   table names, `@map()` for snake_case column names
-- **i18n**: Multi-language support via `@skyra/http-framework-i18n` with
-  locale JSON files in `src/locales/`
+- **i18n**: Multi-language support via `@skyra/http-framework-i18n` with locale
+  JSON files in `src/locales/`
 - **Container Pattern**: Services (Prisma, Fastify, Logger) are attached to
   `container` from `@sapphire/pieces` with corresponding type augmentations
 
@@ -83,17 +83,19 @@ Commands use the decorator pattern from `@skyra/http-framework`:
 
 ```typescript
 @RegisterCommand((builder) =>
-  builder
-    .setName("command-name")
-    .setDescription("Description")
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+	builder
+		.setName("command-name")
+		.setDescription("Description")
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 )
 export class UserCommand extends Command {
-  @RegisterSubcommand((builder) =>
-    builder.setName("sub").setDescription("..."))
-  public async sub(interaction: Command.ChatInputInteraction, options: Options) {
-    // ...
-  }
+	@RegisterSubcommand((builder) => builder.setName("sub").setDescription("..."))
+	public async sub(
+		interaction: Command.ChatInputInteraction,
+		options: Options,
+	) {
+		// ...
+	}
 }
 ```
 
@@ -103,11 +105,11 @@ Routes are registered directly on `container.server` (Fastify):
 
 ```typescript
 container.server.route({
-  url: "/path",
-  method: "GET",
-  handler: async (request, reply) => {
-    // Handle request
-  },
+	url: "/path",
+	method: "GET",
+	handler: async (request, reply) => {
+		// Handle request
+	},
 });
 ```
 

@@ -154,8 +154,8 @@ When committing changes, try to keep an eye out for unintended formatting
 updates. These can make a pull request look noisier than it really is and slow
 down the review process.
 
-The project uses Prettier to handle formatting. If you want to get ahead of
-any formatting issues, run `pnpm format` before committing.
+The project uses Prettier to handle formatting. If you want to get ahead of any
+formatting issues, run `pnpm format` before committing.
 
 ### TypeScript
 
@@ -179,11 +179,11 @@ authorization headers and validate request parameters:
 
 ```typescript
 container.server.route({
-  url: "/guilds/:id",
-  method: "GET",
-  handler: async (request, reply) => {
-    // Verify authorization, validate params, handle request
-  },
+	url: "/guilds/:id",
+	method: "GET",
+	handler: async (request, reply) => {
+		// Verify authorization, validate params, handle request
+	},
 });
 ```
 
@@ -303,8 +303,7 @@ For more context, see
 ## Questions?
 
 If you have questions or need help, feel free to
-[open an issue](https://github.com/wolfstar-project/ring/issues)
-for discussion.
+[open an issue](https://github.com/wolfstar-project/ring/issues) for discussion.
 
 ## License
 

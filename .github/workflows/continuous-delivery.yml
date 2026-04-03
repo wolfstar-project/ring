@@ -6,10 +6,10 @@ on:
     branches:
       - main
     paths:
-      - 'src/**'
-      - 'Dockerfile'
-      - '.github/workflows/continuous-delivery.yml'
-      - 'package.json'
+      - "src/**"
+      - "Dockerfile"
+      - ".github/workflows/continuous-delivery.yml"
+      - "package.json"
 permissions:
   contents: read
   packages: write
@@ -25,4 +25,5 @@ jobs:
     with:
       enablePlatforms: true
       platforms: >-
-        [{"platform": "linux/amd64", "runner": "ubuntu-latest"}, {"platform": "linux/arm64", "runner": "ubuntu-latest"}]
+        [{"platform": "linux/amd64", "runner": "ubuntu-latest"}, {"platform":
+        "linux/arm64", "runner": "ubuntu-latest"}]

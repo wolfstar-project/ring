@@ -2,11 +2,10 @@
 	"extends": "../tsconfig.base.json",
 	"compilerOptions": {
 		"outDir": "../dist",
-		"rootDir": ".",
+		"rootDir": "..",
 		"baseUrl": ".",
 		"resolvePackageJsonImports": true,
-		"composite": true,
 		"skipLibCheck": true
 	},
-	"include": ["."]
+	"include": [".", "../generated"]
 }

@@ -1,6 +1,6 @@
-import type { ArrayString, IntegerString } from '@skyra/env-utilities';
+import type { ArrayString, IntegerString } from "@skyra/env-utilities";
 
-declare module '@skyra/env-utilities' {
+declare module "@skyra/env-utilities" {
 	interface Env {
 		CLIENT_VERSION: string;
 

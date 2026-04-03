@@ -1,12 +1,12 @@
 services:
   postgres:
     container_name: postgres
-    image: 'postgres:15-alpine'
+    image: "postgres:15-alpine"
     ports:
-      - '5432:5432'
+      - "5432:5432"
     restart: always
     volumes:
-      - 'postgres-data:/var/lib/postgresql/data'
+      - "postgres-data:/var/lib/postgresql/data"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -21,10 +21,10 @@ services:
     env_file:
       - ../src/.env
       - ../src/.env.development.local
-    image: 'ghcr.io/wolfstar-project/ring:latest'
+    image: "ghcr.io/wolfstar-project/ring:latest"
     ports:
-      - '8282:8282'
-      - '7282:7282'
+      - "8282:8282"
+      - "7282:7282"
     restart: always
     tty: true
 

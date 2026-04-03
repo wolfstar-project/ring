@@ -1,4 +1,4 @@
-import { defineConfig } from 'taze';
+import { defineConfig } from "taze";
 
 export default defineConfig({
 	write: true,
@@ -9,11 +9,11 @@ export default defineConfig({
 	includeLocked: true,
 	interactive: true,
 	packageMode: {
-		typescript: 'ignore',
-		'@prisma/client': 'ignore',
-		prisma: 'ignore'
+		typescript: "ignore",
+		"@prisma/client": "ignore",
+		prisma: "ignore",
 	},
 	depFields: {
-		overrides: false
-	}
+		overrides: false,
+	},
 });

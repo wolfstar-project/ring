@@ -1,96 +1,189 @@
-import { SlashCommandIntegerOption, SlashCommandStringOption } from '@discordjs/builders';
-import { codeBlock, isNullish } from '@sapphire/utilities';
-import { envParseArray } from '@skyra/env-utilities';
-import { Command, RegisterCommand, RegisterSubcommand } from '@skyra/http-framework';
-import { blue, bold, red, yellow } from '@skyra/logger';
-import { MessageFlags, PermissionFlagsBits } from 'discord-api-types/v10';
+import {
+	SlashCommandIntegerOption,
+	SlashCommandStringOption,
+} from "@discordjs/builders";
+import { codeBlock, isNullish } from "@sapphire/utilities";
+import { envParseArray } from "@skyra/env-utilities";
+import {
+	Command,
+	RegisterCommand,
+	RegisterSubcommand,
+} from "@skyra/http-framework";
+import { blue, bold, red, yellow } from "@skyra/logger";
+import { MessageFlags, PermissionFlagsBits } from "discord-api-types/v10";
 
 @RegisterCommand((builder) =>
 	builder
-		.setName('config')
+		.setName("config")
 		.setDescription("Manage a guild's features")
 		.setDMPermission(false)
-		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 )
 export class UserCommand extends Command {
-	@RegisterSubcommand((builder) => builder.setName('get').setDescription("Gets a guild's features").addStringOption(getGuildOption))
-	public async get(interaction: Command.ChatInputInteraction, options: Options) {
+	@RegisterSubcommand((builder) =>
+		builder
+			.setName("get")
+			.setDescription("Gets a guild's features")
+			.addStringOption(getGuildOption),
+	)
+	public async get(
+		interaction: Command.ChatInputInteraction,
+		options: Options,
+	) {
 		if (!UserCommand.ClientOwners.includes(interaction.user.id)) {
-			return interaction.reply({ content: 'You cannot use this command.', flags: MessageFlags.Ephemeral });
+			return interaction.reply({
+				content: "You cannot use this command.",
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
-		const data = await this.container.prisma.guild.findFirst({ where: { id: BigInt(options.guild) } });
+		const data = await this.container.prisma.guild.findFirst({
+			where: { id: BigInt(options.guild) },
+		});
 		if (isNullish(data)) {
-			return interaction.reply({ content: 'There is no data recorded for that guild.', flags: MessageFlags.Ephemeral });
+			return interaction.reply({
+				content: "There is no data recorded for that guild.",
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
 		const lines = [
-			`${bold('Guild ID')}: ${bold(blue(data.id.toString().padStart(19, ' ')))}`,
-			`${bold('Maximum YouTube Subscriptions')}: ${formatRange(data.maximumYouTubeSubscriptions, 3, 10)}`,
-			`${bold('Maximum Twitch Subscriptions ')}: ${formatRange(data.maximumTwitchSubscriptions, 5, 20)}`,
-			`${bold('Maximum Filtered Words       ')}: ${formatRange(data.maximumFilteredWords, 50, 200)}`,
-			`${bold('Maximum Filtered Reactions   ')}: ${formatRange(data.maximumFilteredReactions, 50, 200)}`,
-			`${bold('Maximum Allowed Links        ')}: ${formatRange(data.maximumAllowedLinks, 25, 100)}`,
-			`${bold('Maximum Allowed Invite Codes ')}: ${formatRange(data.maximumAllowedInviteCodes, 25, 100)}`
+			`${bold("Guild ID")}: ${bold(blue(data.id.toString().padStart(19, " ")))}`,
+			`${bold("Maximum YouTube Subscriptions")}: ${formatRange(data.maximumYouTubeSubscriptions, 3, 10)}`,
+			`${bold("Maximum Twitch Subscriptions ")}: ${formatRange(data.maximumTwitchSubscriptions, 5, 20)}`,
+			`${bold("Maximum Filtered Words       ")}: ${formatRange(data.maximumFilteredWords, 50, 200)}`,
+			`${bold("Maximum Filtered Reactions   ")}: ${formatRange(data.maximumFilteredReactions, 50, 200)}`,
+			`${bold("Maximum Allowed Links        ")}: ${formatRange(data.maximumAllowedLinks, 25, 100)}`,
+			`${bold("Maximum Allowed Invite Codes ")}: ${formatRange(data.maximumAllowedInviteCodes, 25, 100)}`,
 		];
-		return interaction.reply({ content: codeBlock('ansi', lines.join('\n')), flags: MessageFlags.Ephemeral });
+		return interaction.reply({
+			content: codeBlock("ansi", lines.join("\n")),
+			flags: MessageFlags.Ephemeral,
+		});
 	}
 
 	@RegisterSubcommand((builder) =>
 		builder
-			.setName('set')
+			.setName("set")
 			.setDescription("Updates a guild's features")
 			.addStringOption(getGuildOption)
-			.addIntegerOption(getIntegerOption(3, 10, 'maximum-youtube-subscriptions', '(Staryl) The maximum amount of YouTube subscriptions'))
-			.addIntegerOption(getIntegerOption(5, 20, 'maximum-twitch-subscriptions', '(Staryl) The maximum amount of Twitch subscriptions'))
-			.addIntegerOption(getIntegerOption(50, 200, 'maximum-filtered-words', '(WolfStar) The maximum amount of filtered words'))
-			.addIntegerOption(getIntegerOption(50, 200, 'maximum-filtered-reactions', '(WolfStar) The maximum amount of filtered reactions'))
-			.addIntegerOption(getIntegerOption(25, 100, 'maximum-allowed-links', '(WolfStar) The maximum amount of allowed links'))
-			.addIntegerOption(getIntegerOption(25, 100, 'maximum-allowed-invite-codes', '(WolfStar) The maximum amount of allowed invite codes'))
+			.addIntegerOption(
+				getIntegerOption(
+					3,
+					10,
+					"maximum-youtube-subscriptions",
+					"(Staryl) The maximum amount of YouTube subscriptions",
+				),
+			)
+			.addIntegerOption(
+				getIntegerOption(
+					5,
+					20,
+					"maximum-twitch-subscriptions",
+					"(Staryl) The maximum amount of Twitch subscriptions",
+				),
+			)
+			.addIntegerOption(
+				getIntegerOption(
+					50,
+					200,
+					"maximum-filtered-words",
+					"(WolfStar) The maximum amount of filtered words",
+				),
+			)
+			.addIntegerOption(
+				getIntegerOption(
+					50,
+					200,
+					"maximum-filtered-reactions",
+					"(WolfStar) The maximum amount of filtered reactions",
+				),
+			)
+			.addIntegerOption(
+				getIntegerOption(
+					25,
+					100,
+					"maximum-allowed-links",
+					"(WolfStar) The maximum amount of allowed links",
+				),
+			)
+			.addIntegerOption(
+				getIntegerOption(
+					25,
+					100,
+					"maximum-allowed-invite-codes",
+					"(WolfStar) The maximum amount of allowed invite codes",
+				),
+			),
 	)
-	public async set(interaction: Command.ChatInputInteraction, options: SetOptions) {
+	public async set(
+		interaction: Command.ChatInputInteraction,
+		options: SetOptions,
+	) {
 		if (!UserCommand.ClientOwners.includes(interaction.user.id)) {
-			return interaction.reply({ content: 'You cannot use this command.', flags: MessageFlags.Ephemeral });
+			return interaction.reply({
+				content: "You cannot use this command.",
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
 		const id = BigInt(options.guild);
 		const data = {
-			maximumYouTubeSubscriptions: options['maximum-youtube-subscriptions'],
-			maximumTwitchSubscriptions: options['maximum-twitch-subscriptions'],
-			maximumFilteredWords: options['maximum-filtered-words'],
-			maximumFilteredReactions: options['maximum-filtered-reactions'],
-			maximumAllowedLinks: options['maximum-allowed-links'],
-			maximumAllowedInviteCodes: options['maximum-allowed-invite-codes']
+			maximumYouTubeSubscriptions: options["maximum-youtube-subscriptions"],
+			maximumTwitchSubscriptions: options["maximum-twitch-subscriptions"],
+			maximumFilteredWords: options["maximum-filtered-words"],
+			maximumFilteredReactions: options["maximum-filtered-reactions"],
+			maximumAllowedLinks: options["maximum-allowed-links"],
+			maximumAllowedInviteCodes: options["maximum-allowed-invite-codes"],
 		};
 		try {
 			await this.container.prisma.guild.upsert({
 				where: { id },
 				create: { id, ...data },
-				update: data
+				update: data,
 			});
-			return interaction.reply({ content: 'Updated.', flags: MessageFlags.Ephemeral });
+			return interaction.reply({
+				content: "Updated.",
+				flags: MessageFlags.Ephemeral,
+			});
 		} catch (error) {
 			this.container.logger.error(error);
 
 			return interaction.reply({
-				content: 'I was not able to update the configuration, please check my logs and/or try again later.',
-				flags: MessageFlags.Ephemeral
+				content:
+					"I was not able to update the configuration, please check my logs and/or try again later.",
+				flags: MessageFlags.Ephemeral,
 			});
 		}
 	}
 
-	@RegisterSubcommand((builder) => builder.setName('reset').setDescription("Resets a guild's features").addStringOption(getGuildOption))
-	public async reset(interaction: Command.ChatInputInteraction, options: Options) {
+	@RegisterSubcommand((builder) =>
+		builder
+			.setName("reset")
+			.setDescription("Resets a guild's features")
+			.addStringOption(getGuildOption),
+	)
+	public async reset(
+		interaction: Command.ChatInputInteraction,
+		options: Options,
+	) {
 		if (!UserCommand.ClientOwners.includes(interaction.user.id)) {
-			return interaction.reply({ content: 'You cannot use this command.', flags: MessageFlags.Ephemeral });
+			return interaction.reply({
+				content: "You cannot use this command.",
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
-		const data = await this.container.prisma.guild.delete({ where: { id: BigInt(options.guild) } });
-		const content = isNullish(data) ? 'There is no data recorded for that guild.' : "Successfully deleted the specified guild's data.";
+		const data = await this.container.prisma.guild.delete({
+			where: { id: BigInt(options.guild) },
+		});
+		const content = isNullish(data)
+			? "There is no data recorded for that guild."
+			: "Successfully deleted the specified guild's data.";
 		return interaction.reply({ content, flags: MessageFlags.Ephemeral });
 	}
 
-	private static readonly ClientOwners = envParseArray('CLIENT_OWNERS');
+	private static readonly ClientOwners = envParseArray("CLIENT_OWNERS");
 }
 
 interface Options {
@@ -98,25 +191,34 @@ interface Options {
 }
 
 interface SetOptions extends Options {
-	'maximum-youtube-subscriptions'?: number;
-	'maximum-twitch-subscriptions'?: number;
-	'maximum-filtered-words'?: number;
-	'maximum-filtered-reactions'?: number;
-	'maximum-allowed-links'?: number;
-	'maximum-allowed-invite-codes'?: number;
+	"maximum-youtube-subscriptions"?: number;
+	"maximum-twitch-subscriptions"?: number;
+	"maximum-filtered-words"?: number;
+	"maximum-filtered-reactions"?: number;
+	"maximum-allowed-links"?: number;
+	"maximum-allowed-invite-codes"?: number;
 }
 
 function getGuildOption() {
 	return new SlashCommandStringOption()
-		.setName('guild')
-		.setDescription('The ID of the guild to manage')
+		.setName("guild")
+		.setDescription("The ID of the guild to manage")
 		.setMinLength(17)
 		.setMaxLength(19)
 		.setRequired(true);
 }
 
-function getIntegerOption(min: number, max: number, name: string, description: string) {
-	return new SlashCommandIntegerOption().setName(name).setDescription(`${description} (${min}-${max})`).setMinValue(min).setMaxValue(max);
+function getIntegerOption(
+	min: number,
+	max: number,
+	name: string,
+	description: string,
+) {
+	return new SlashCommandIntegerOption()
+		.setName(name)
+		.setDescription(`${description} (${min}-${max})`)
+		.setMinValue(min)
+		.setMaxValue(max);
 }
 
 function formatRange(value: number, min: number, max: number) {
@@ -126,5 +228,5 @@ function formatRange(value: number, min: number, max: number) {
 }
 
 function format(value: number) {
-	return value.toString().padStart(3, ' ');
+	return value.toString().padStart(3, " ");
 }

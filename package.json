@@ -1,14 +1,15 @@
 {
 	"name": "@wolfstar/ring",
 	"version": "1.0.0",
-	"description": "Private centralized management android for the WolfStar Network",
-	"author": "WolfStar Project <contact@wolfstar.rocks>",
-	"license": "Apache-2.0",
 	"private": true,
-	"main": "dist/main.mjs",
+	"description": "Private centralized management android for the WolfStar Network",
+	"license": "Apache-2.0",
+	"author": "WolfStar Project <contact@wolfstar.rocks>",
 	"type": "module",
+	"main": "dist/main.mjs",
 	"imports": {
 		"#api/*": "./dist/api/*.mjs",
+		"#generated/prisma": "./generated/prisma/client.js",
 		"#lib/*": "./dist/lib/*.mjs"
 	},
 	"scripts": {
@@ -19,16 +20,15 @@
 		"prisma:generate": "pnpm prisma generate",
 		"clean": "node scripts/build/clean.mjs",
 		"start": "node --enable-source-maps dist/main.mjs",
-		"test": "eslint --ext ts src",
-		"lint": "eslint --fix --ext ts src",
-		"format": "prettier --write --log-level=warn \"src/**/*.{mjs,ts,json}\"",
+		"lint": "oxlint && oxfmt --check",
+		"lint:fix": "oxlint --fix && oxfmt",
 		"prepare": "husky"
 	},
 	"dependencies": {
 		"@discordjs/builders": "^1.10.1",
 		"@discordjs/collection": "^2.1.1",
-		"@prisma/client": "^6.8.2",
-
+		"@prisma/adapter-pg": "^7.6.0",
+		"@prisma/client": "^7.6.0",
 		"@sapphire/result": "^2.7.2",
 		"@sapphire/utilities": "^3.18.2",
 		"@skyra/env-utilities": "^2.0.1",
@@ -41,72 +41,61 @@
 		"fastify": "^5.3.0",
 		"gradient-string": "^3.0.0",
 		"husky": "^9.1.7",
+		"nano-staged": "^0.9.0",
 		"tslib": "^2.8.1"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^19.8.0",
 		"@commitlint/config-conventional": "^19.8.0",
-		"@sapphire/eslint-config": "^5.0.5",
-		"@sapphire/prettier-config": "^2.0.0",
+		"@eslint-community/eslint-plugin-eslint-comments": "^4.7.1",
+		"@rollup/plugin-alias": "^6.0.0",
 		"@sapphire/ts-config": "^5.0.1",
 		"@types/gradient-string": "^1.1.6",
 		"@types/node": "^24.12.2",
-		"@typescript-eslint/eslint-plugin": "^7.13.0",
-		"@typescript-eslint/parser": "^7.13.0",
 		"cz-conventional-changelog": "^3.3.0",
-		"eslint": "^8.57.1",
-		"eslint-config-prettier": "^10.1.5",
-		"eslint-plugin-prettier": "^5.2.6",
-		"lint-staged": "^16.1.0",
-		"prettier": "^3.5.3",
-		"prisma": "^6.8.2",
+		"eslint-plugin-regexp": "^3.1.0",
+		"oxfmt": "^0.43.0",
+		"oxlint": "^1.58.0",
+		"prisma": "^7.6.0",
 		"taze": "^19.9.2",
 		"tsdown": "^0.17.2",
-		"@rollup/plugin-alias": "^6.0.0",
 		"typescript": "~5.4.5"
 	},
-	"pnpm": {
-		"overrides": {
-			"ansi-regex": "^5.0.1",
-			"discord-api-types": "^0.37.100",
-			"minimist": "^1.2.8"
-		},
-		"allowedDeprecatedVersions": {
-			"eslint": "8.57.1"
-		},
-		"onlyBuiltDependencies": [
-			"@prisma/client",
-			"@prisma/engines",
-			"prisma"
+	"nano-staged": {
+		"*.{js,ts,mjs,cjs}": [
+			"pnpm oxlint --fix"
+		],
+		"*.{js,ts,mjs,cjs,json,yml,md}": [
+			"pnpm oxfmt"
 		]
-	},
-	"engines": {
-		"node": ">=18",
-		"pnpm": ">=10"
 	},
 	"commitlint": {
 		"extends": [
 			"@commitlint/config-conventional"
 		]
 	},
-	"lint-staged": {
-		"*.{mjs,js,ts}": "eslint --fix --ext mjs,js,ts"
-	},
 	"config": {
 		"commitizen": {
-			"*": "prettier --ignore-unknown --write",
 			"path": "./node_modules/cz-conventional-changelog"
 		}
 	},
-	"prettier": "@sapphire/prettier-config",
-	"eslintConfig": {
-		"extends": "@sapphire",
-		"rules": {
-			"@typescript-eslint/no-base-to-string": "off"
-		}
+	"engines": {
+		"node": ">=18",
+		"pnpm": ">=10"
 	},
-	"packageManager": "pnpm@10.24.0",
 	"volta": {
 		"node": "24.14.1"
+	},
+	"packageManager": "pnpm@10.24.0",
+	"pnpm": {
+		"overrides": {
+			"ansi-regex": "^5.0.1",
+			"discord-api-types": "^0.37.100",
+			"minimist": "^1.2.8"
+		},
+		"onlyBuiltDependencies": [
+			"@prisma/client",
+			"prisma"
+		]
 	}
 }

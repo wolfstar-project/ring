@@ -33,6 +33,7 @@ COPY --chown=node:node prisma/ prisma/
 COPY --chown=node:node src/ src/
 COPY --chown=node:node tsconfig.base.json tsconfig.base.json
 COPY --chown=node:node tsdown.config.ts tsdown.config.ts
+COPY --chown=node:node prisma.config.ts prisma.config.ts
 
 RUN pnpm install --frozen-lockfile \
 	&& pnpm run prisma:generate \
@@ -54,9 +55,8 @@ COPY --chown=node:node --from=builder /usr/src/app/src/.env src/.env
 
 RUN pnpm install --prod --frozen-lockfile --offline
 
-# Patch .prisma with the built files
-COPY --chown=node:node --from=builder /usr/src/app/node_modules/@prisma/client ./node_modules/@prisma/client
-COPY --chown=node:node --from=builder /usr/src/app/node_modules/.pnpm/@prisma+client* ./node_modules/.pnpm/
+# Copy Prisma generated client
+COPY --chown=node:node --from=builder /usr/src/app/generated ./generated
 
 USER node
 

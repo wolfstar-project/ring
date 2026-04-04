@@ -22,7 +22,8 @@
 		"start": "node --enable-source-maps dist/main.mjs",
 		"lint": "oxlint && oxfmt --check",
 		"lint:fix": "oxlint --fix && oxfmt",
-		"prepare": "husky"
+		"prepare": "node .husky/install.mjs",
+		"update:interactive": "taze"
 	},
 	"dependencies": {
 		"@discordjs/builders": "^1.10.1",

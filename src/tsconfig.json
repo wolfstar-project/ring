@@ -2,10 +2,16 @@
 	"extends": "../tsconfig.base.json",
 	"compilerOptions": {
 		"outDir": "../dist",
-		"rootDir": "..",
+		"rootDir": ".",
 		"baseUrl": ".",
-		"resolvePackageJsonImports": true,
-		"skipLibCheck": true
+		"allowJs": true,
+		"skipLibCheck": true,
+		"paths": {
+			"#lib/*": ["./lib/*"],
+			"#api/*": ["./api/*"],
+			"#generated/prisma": ["../generated/prisma/client"]
+		}
 	},
-	"include": [".", "../generated"]
+	"include": [".", "./**/*.json"],
+	"exclude": ["./tsconfig.json"]
 }

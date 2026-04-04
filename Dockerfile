@@ -26,7 +26,7 @@ COPY --chown=node:node .npmrc .
 ENTRYPOINT ["dumb-init", "--"]
 
 # ================ #
-#   Builder Stage   #
+#  Builder Stage   #
 # ================ #
 
 FROM base AS builder
@@ -34,10 +34,10 @@ FROM base AS builder
 ENV NODE_ENV="development"
 
 COPY --chown=node:node prisma/ prisma/
+COPY --chown=node:node prisma.config.ts prisma.config.ts
 COPY --chown=node:node src/ src/
 COPY --chown=node:node tsconfig.base.json tsconfig.base.json
 COPY --chown=node:node tsdown.config.ts tsdown.config.ts
-COPY --chown=node:node prisma.config.ts prisma.config.ts
 
 RUN pnpm install --frozen-lockfile \
 	&& pnpm run prisma:generate \
@@ -53,14 +53,12 @@ ENV NODE_ENV="production"
 ENV NODE_OPTIONS="--enable-source-maps"
 
 COPY --chown=node:node --from=builder /usr/src/app/dist dist
+COPY --chown=node:node --from=builder /usr/src/app/generated generated
 COPY --chown=node:node --from=builder /usr/src/app/src/locales src/locales
 COPY --chown=node:node --from=builder /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /usr/src/app/src/.env src/.env
 
 RUN pnpm install --prod --frozen-lockfile --offline
-
-# Copy Prisma generated client
-COPY --chown=node:node --from=builder /usr/src/app/generated ./generated
 
 USER node
 

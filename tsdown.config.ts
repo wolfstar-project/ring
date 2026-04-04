@@ -36,6 +36,14 @@ export default defineConfig({
 		alias({
 			entries: [
 				{
+					find: "#lib",
+					replacement: "#lib",
+					customResolver(source) {
+						const subPath = source.replace("#lib/", "");
+						return resolveSource("src/lib", subPath);
+					},
+				},
+				{
 					find: "#api",
 					replacement: "#api",
 					customResolver(source) {
@@ -43,7 +51,6 @@ export default defineConfig({
 						return resolveSource("src/api", subPath);
 					},
 				},
-				{ find: /^#lib\/(.*)/, replacement: resolve("src/lib/$1.ts") },
 			],
 		}),
 		copyPlugin(),

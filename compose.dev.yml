@@ -1,0 +1,39 @@
+services:
+  ring:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    container_name: ring
+    build:
+      context: ./
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    restart: no
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@host.docker.internal:5432/ring?schema=public"
+    env_file:
+      - src/.env
+      - src/.env.development.local
+
+  postgres:
+    container_name: ring-postgres
+    image: "postgres:15-alpine"
+    ports:
+      - "5432:5432"
+    restart: no
+    volumes:
+      - "ring-postgres-data:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ring
+    healthcheck:
+      test: [CMD-SHELL, pg_isready]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+
+volumes:
+  ring-postgres-data:

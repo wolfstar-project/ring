@@ -1,6 +1,8 @@
 {
 	"extends": "../tsconfig.base.json",
 	"compilerOptions": {
+		"module": "ESNext",
+		"moduleResolution": "bundler",
 		"rootDir": "..",
 		"allowJs": true,
 		"skipLibCheck": true,
@@ -11,5 +13,5 @@
 		}
 	},
 	"include": [".", "./**/*.json"],
-	"exclude": ["./tsconfig.json"]
+	"exclude": ["./tsconfig.json", "../dist"]
 }

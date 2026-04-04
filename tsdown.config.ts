@@ -13,11 +13,11 @@ function copyPlugin(): RolldownPluginOption {
 		name: "copy-mjs-files",
 		buildEnd() {
 			const srcDir = resolve(__dirname, "src/locales");
-			const destLocalesDir = resolve(__dirname, "dist/locales");
+			const distLocalesDir = resolve(__dirname, "dist/locales");
 
 			if (existsSync(srcDir)) {
-				mkdirSync(destLocalesDir, { recursive: true });
-				cpSync(srcDir, destLocalesDir, { recursive: true });
+				mkdirSync(distLocalesDir, { recursive: true });
+				cpSync(srcDir, distLocalesDir, { recursive: true });
 				console.log("✓ Copied locales to dist");
 			}
 		},

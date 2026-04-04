@@ -6,11 +6,7 @@
 		"rootDir": "..",
 		"allowJs": true,
 		"skipLibCheck": true,
-		"paths": {
-			"#lib/*": ["./lib/*"],
-			"#api/*": ["./api/*"],
-			"#generated/prisma": ["../generated/prisma/client"]
-		}
+		"resolvePackageJsonImports": true
 	},
 	"include": [".", "./**/*.json"],
 	"exclude": ["./tsconfig.json", "../dist"]

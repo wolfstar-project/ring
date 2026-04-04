@@ -7,6 +7,11 @@ const __dirname = dirname(__filename);
 import type { RolldownPluginOption } from "rolldown";
 import alias from "@rollup/plugin-alias";
 
+function resolveSource(base: string, subPath: string): string {
+	if (subPath.endsWith(".ts")) return resolve(__dirname, base, subPath);
+	return resolve(__dirname, base, `${subPath}.ts`);
+}
+
 // Plugin to copy .mjs files from src to dist
 function copyPlugin(): RolldownPluginOption {
 	return {
@@ -30,19 +35,25 @@ export default defineConfig({
 	plugins: [
 		alias({
 			entries: [
-				{ find: /^#api\/(.*)/, replacement: resolve("src/api/$1.ts") },
+				{
+					find: "#api",
+					replacement: "#api",
+					customResolver(source) {
+						const subPath = source.replace("#api/", "");
+						return resolveSource("src/api", subPath);
+					},
+				},
 				{ find: /^#lib\/(.*)/, replacement: resolve("src/lib/$1.ts") },
 			],
 		}),
 		copyPlugin(),
 	],
-	external: ["#generated/prisma"],
-	dts: true,
+	dts: false,
 	unbundle: true,
 	sourcemap: true,
 	minify: false,
 	platform: "node",
 	tsconfig: "src/tsconfig.json",
 	treeshake: true,
-	skipNodeModulesBundle: true,
+	deps: { neverBundle: ["#generated/prisma"], skipNodeModulesBundle: true },
 });

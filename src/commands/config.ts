@@ -10,13 +10,17 @@ import {
 	RegisterSubcommand,
 } from "@skyra/http-framework";
 import { blue, bold, red, yellow } from "@skyra/logger";
-import { MessageFlags, PermissionFlagsBits } from "discord-api-types/v10";
+import {
+	MessageFlags,
+	PermissionFlagsBits,
+	ApplicationIntegrationType,
+} from "discord-api-types/v10";
 
 @RegisterCommand((builder) =>
 	builder
 		.setName("config")
 		.setDescription("Manage a guild's features")
-		.setDMPermission(false)
+		.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 )
 export class UserCommand extends Command {

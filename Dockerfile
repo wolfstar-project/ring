@@ -42,7 +42,8 @@ COPY --chown=node:node tsdown.config.ts tsdown.config.ts
 
 RUN pnpm install --frozen-lockfile \
 	&& pnpm run prisma:generate \
-	&& pnpm run build
+	&& pnpm run build \
+	&& pnpm prune --prod
 
 # ================ #
 #   Runner Stage   #
@@ -58,8 +59,6 @@ COPY --chown=node:node --from=builder /usr/src/app/generated generated
 COPY --chown=node:node --from=builder /usr/src/app/src/locales src/locales
 COPY --chown=node:node --from=builder /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /usr/src/app/src/.env src/.env
-
-RUN pnpm install --prod --frozen-lockfile --offline
 
 USER node
 

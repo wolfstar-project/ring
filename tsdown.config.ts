@@ -1,11 +1,13 @@
+import type { RolldownPluginOption } from "rolldown";
+// oxlint-disable no-underscore-dangle
 import { existsSync, mkdirSync, cpSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import alias from "@rollup/plugin-alias";
 import { defineConfig } from "tsdown";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-import type { RolldownPluginOption } from "rolldown";
-import alias from "@rollup/plugin-alias";
 
 function resolveSource(base: string, subPath: string): string {
 	if (subPath.endsWith(".ts")) return resolve(__dirname, base, subPath);
@@ -44,6 +46,10 @@ export default defineConfig({
 					},
 				},
 				{
+					find: "#generated/prisma",
+					replacement: resolve(__dirname, "src/generated/prisma/client.ts"),
+				},
+				{
 					find: "#api",
 					replacement: "#api",
 					customResolver(source) {
@@ -62,5 +68,5 @@ export default defineConfig({
 	platform: "node",
 	tsconfig: "src/tsconfig.json",
 	treeshake: true,
-	deps: { neverBundle: ["#generated/prisma"], skipNodeModulesBundle: true },
+	deps: { skipNodeModulesBundle: true },
 });

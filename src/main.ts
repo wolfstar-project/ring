@@ -8,7 +8,7 @@ import { morning } from "gradient-string";
 
 await setup();
 
-await load(new URL("../src/locales", import.meta.url));
+await load(new URL("./locales", import.meta.url));
 await init({
 	fallbackLng: "en-US",
 	returnNull: false,

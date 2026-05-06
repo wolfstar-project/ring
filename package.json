@@ -9,7 +9,7 @@
 	"main": "dist/main.mjs",
 	"imports": {
 		"#api/*": "./dist/api/*.mjs",
-		"#generated/prisma": "./generated/prisma/client.js",
+		"#generated/prisma": "./dist/generated/prisma/client.mjs",
 		"#lib/*": "./dist/lib/*.mjs"
 	},
 	"scripts": {

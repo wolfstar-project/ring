@@ -1,25 +1,21 @@
 # syntax=docker/dockerfile:1.23
 
 # ================ #
-#    Base Stage    #
+#   Base Stage     #
 # ================ #
 
 FROM node:24-alpine AS base
 
 WORKDIR /usr/src/app
-ARG NODE_OPTIONS
 
 ENV CI="true"
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-ENV LOG_LEVEL=info
-ENV FORCE_COLOR=true
 
 RUN apk add --no-cache dumb-init g++ make python3
-
-COPY --chown=node:node package.json .
 RUN corepack enable && corepack install
 
+COPY --chown=node:node package.json .
 COPY --chown=node:node pnpm-lock.yaml .
 COPY --chown=node:node pnpm-workspace.yaml .
 COPY --chown=node:node .npmrc .
@@ -27,7 +23,7 @@ COPY --chown=node:node .npmrc .
 ENTRYPOINT ["dumb-init", "--"]
 
 # ================ #
-#  Builder Stage   #
+#   Builder Stage  #
 # ================ #
 
 FROM base AS builder
@@ -52,13 +48,17 @@ RUN pnpm install --frozen-lockfile \
 FROM base AS runner
 
 ENV NODE_ENV="production"
-ENV NODE_OPTIONS="--enable-source-maps"
+ENV NODE_OPTIONS="--enable-source-maps --max_old_space_size=4096"
+
+WORKDIR /usr/src/app
 
 COPY --chown=node:node --from=builder /usr/src/app/dist dist
 COPY --chown=node:node --from=builder /usr/src/app/generated generated
 COPY --chown=node:node --from=builder /usr/src/app/src/locales src/locales
 COPY --chown=node:node --from=builder /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /usr/src/app/src/.env src/.env
+
+RUN pnpm install --prod --frozen-lockfile --offline
 
 USER node
 

@@ -40,10 +40,9 @@ COPY --chown=node:node tsconfig.base.json tsconfig.base.json
 COPY --chown=node:node tsdown.config.ts tsdown.config.ts
 
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm install --frozen-lockfile --offline \
+    pnpm install --frozen-lockfile \
     && pnpm run prisma:generate \
-    && pnpm run build \
-    && pnpm prune --prod
+    && pnpm run build
 
 # ================ #
 #   Runner Stage   #
@@ -60,7 +59,7 @@ COPY --chown=node:node --from=builder /usr/src/app/dist dist
 COPY --chown=node:node --from=builder /usr/src/app/src/.env src/.env
 
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
-    pnpm install --prod --frozen-lockfile --offline
+    pnpm install --prod --frozen-lockfile
 
 USER node
 

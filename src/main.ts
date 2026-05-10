@@ -30,20 +30,22 @@ const address = envParseString("HTTP_ADDRESS", "0.0.0.0");
 const port = envParseInteger("HTTP_PORT", 3000);
 await client.listen({ address, port });
 
-client.server.on("request", (request, response) => {
-	const chunks: Buffer[] = [];
-	request.on("data", (chunk: Buffer) => chunks.push(chunk));
-	response.on("finish", () => {
-		const base = `${request.method} ${request.url} → ${response.statusCode}`;
-		if (request.method === "POST" && chunks.length > 0) {
-			container.logger.info(
-				`${base} | body: ${Buffer.concat(chunks).toString("utf8")}`,
-			);
-		} else {
-			container.logger.info(base);
-		}
+if (process.env.NODE_ENV === "development") {
+	client.server.on("request", (request, response) => {
+		const chunks: Buffer[] = [];
+		request.on("data", (chunk: Buffer) => chunks.push(chunk));
+		response.on("finish", () => {
+			const base = `${request.method} ${request.url} → ${response.statusCode}`;
+			if (request.method === "POST" && chunks.length > 0) {
+				container.logger.info(
+					`${base} | body: ${Buffer.concat(chunks).toString("utf8")}`,
+				);
+			} else {
+				container.logger.info(base);
+			}
+		});
 	});
-});
+}
 
 console.log(
 	morning.multiline(

@@ -22,7 +22,7 @@
 		"start": "node --enable-source-maps dist/main.mjs",
 		"lint": "oxlint && oxfmt --check",
 		"lint:fix": "oxlint --fix && oxfmt",
-		"prepare": "node .husky/install.mjs",
+		"prepare": "test -f .husky/install.mjs && node .husky/install.mjs || true",
 		"update:interactive": "taze"
 	},
 	"dependencies": {

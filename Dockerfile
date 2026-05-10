@@ -13,12 +13,15 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
 RUN apk add --no-cache dumb-init g++ make python3
-RUN corepack enable && corepack install
+RUN corepack enable
 
-COPY --chown=node:node package.json .
 COPY --chown=node:node pnpm-lock.yaml .
 COPY --chown=node:node pnpm-workspace.yaml .
+COPY --chown=node:node package.json .
 COPY --chown=node:node .npmrc .
+
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm fetch --frozen-lockfile
 
 ENTRYPOINT ["dumb-init", "--"]
 
@@ -36,10 +39,11 @@ COPY --chown=node:node src/ src/
 COPY --chown=node:node tsconfig.base.json tsconfig.base.json
 COPY --chown=node:node tsdown.config.ts tsdown.config.ts
 
-RUN pnpm install --frozen-lockfile \
-	&& pnpm run prisma:generate \
-	&& pnpm run build \
-	&& pnpm prune --prod
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --frozen-lockfile --offline \
+    && pnpm run prisma:generate \
+    && pnpm run build \
+    && pnpm prune --prod
 
 # ================ #
 #   Runner Stage   #
@@ -53,10 +57,10 @@ ENV NODE_OPTIONS="--enable-source-maps --max_old_space_size=4096"
 WORKDIR /usr/src/app
 
 COPY --chown=node:node --from=builder /usr/src/app/dist dist
-COPY --chown=node:node --from=builder /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /usr/src/app/src/.env src/.env
 
-RUN pnpm install --prod --frozen-lockfile --offline
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --prod --frozen-lockfile --offline
 
 USER node
 

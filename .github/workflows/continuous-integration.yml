@@ -57,5 +57,8 @@ jobs:
       - name: 📦 Install dependencies (root only, no scripts)
         run: pnpm install --filter . --ignore-scripts
 
-      - name: � Build project
+      - name: 🔼 Generate Prisma Client
+        run: pnpm prisma:generate
+
+      - name: 🏗️ Build project
         run: pnpm build

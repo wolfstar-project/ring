@@ -11,6 +11,8 @@ WORKDIR /usr/src/app
 ENV CI="true"
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV LOG_LEVEL=info
+ENV FORCE_COLOR=true
 
 RUN apk add --no-cache dumb-init g++ make python3
 RUN corepack enable

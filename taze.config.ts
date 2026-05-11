@@ -8,11 +8,6 @@ export default defineConfig({
 	recursive: true,
 	includeLocked: true,
 	interactive: true,
-	packageMode: {
-		typescript: "ignore",
-		"@prisma/client": "ignore",
-		prisma: "ignore",
-	},
 	depFields: {
 		overrides: false,
 	},

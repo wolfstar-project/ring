@@ -1,3 +1,4 @@
+import { getMappings } from "#common/limits";
 import { container } from "@sapphire/pieces";
 import { isNullish, isNullishOrEmpty } from "@sapphire/utilities";
 
@@ -44,38 +45,3 @@ container.server.route({
 		return reply.code(200).send(data ?? mappings.defaults);
 	},
 });
-
-const Mappings = {
-	staryl: {
-		properties: {
-			maximumYouTubeSubscriptions: true,
-			maximumTwitchSubscriptions: true,
-		},
-		defaults: { maximumYouTubeSubscriptions: 3, maximumTwitchSubscriptions: 5 },
-	},
-	wolfstar: {
-		properties: {
-			maximumFilteredWords: true,
-			maximumFilteredReactions: true,
-			maximumAllowedLinks: true,
-			maximumAllowedInviteCodes: true,
-		},
-		defaults: {
-			maximumFilteredWords: 50,
-			maximumFilteredReactions: 50,
-			maximumAllowedLinks: 25,
-			maximumAllowedInviteCodes: 25,
-		},
-	},
-} as const;
-
-function getMappings(token: string) {
-	switch (token) {
-		case process.env.INTERNAL_API_STARYL_TOKEN:
-			return Mappings.staryl;
-		case process.env.INTERNAL_API_WOLFSTAR_TOKEN:
-			return Mappings.wolfstar;
-		default:
-			return null;
-	}
-}

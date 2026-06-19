@@ -9,8 +9,11 @@
 	"main": "dist/main.mjs",
 	"imports": {
 		"#api/*": "./dist/api/*.mjs",
+		"#common/*": "./dist/lib/common/*.mjs",
 		"#generated/prisma": "./dist/generated/prisma/client.mjs",
-		"#lib/*": "./dist/lib/*.mjs"
+		"#lib/*": "./dist/lib/*.mjs",
+		"#types": "./dist/lib/types/index.mjs",
+		"#types/*": "./dist/lib/types/*.mjs"
 	},
 	"scripts": {
 		"build": "tsdown",
@@ -32,12 +35,12 @@
 		"@prisma/client": "^7.8.0",
 		"@sapphire/result": "^2.8.0",
 		"@sapphire/utilities": "^3.18.2",
-		"@skyra/env-utilities": "^2.0.1",
-		"@skyra/http-framework": "^2.2.1",
-		"@skyra/http-framework-i18n": "^1.2.1",
-		"@skyra/logger": "^2.0.4",
-		"@skyra/shared-http-pieces": "^1.2.3",
-		"@skyra/start-banner": "^2.0.2",
+		"@wolfstar/env-utilities": "^3.0.1",
+		"@wolfstar/http-framework": "^3.0.1",
+		"@wolfstar/http-framework-i18n": "^3.0.1",
+		"@wolfstar/logger": "^3.0.1",
+		"@wolfstar/shared-http-pieces": "^3.0.1",
+		"@wolfstar/start-banner": "^3.0.1",
 		"discord-api-types": "^0.38.47",
 		"fastify": "^5.8.5",
 		"gradient-string": "^3.0.0",
@@ -61,7 +64,7 @@
 		"prisma": "^7.8.0",
 		"taze": "^19.11.0",
 		"tsdown": "^0.21.10",
-		"typescript": "~5.4.5"
+		"typescript": "~5.9.3"
 	},
 	"nano-staged": {
 		"*.{js,ts,mjs,cjs}": [

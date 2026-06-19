@@ -1,15 +1,21 @@
+import type { GuildLimitField } from "#types/limits";
+import {
+	GuildLimitFields,
+	LimitDefinitions,
+	getAllDefaults,
+} from "#common/limits";
 import {
 	SlashCommandIntegerOption,
 	SlashCommandStringOption,
 } from "@discordjs/builders";
 import { codeBlock, isNullish } from "@sapphire/utilities";
-import { envParseArray } from "@skyra/env-utilities";
+import { envParseArray } from "@wolfstar/env-utilities";
 import {
 	Command,
 	RegisterCommand,
 	RegisterSubcommand,
-} from "@skyra/http-framework";
-import { blue, bold, red, yellow } from "@skyra/logger";
+} from "@wolfstar/http-framework";
+import { blue, bold, red, yellow } from "@wolfstar/logger";
 import {
 	MessageFlags,
 	PermissionFlagsBits,
@@ -24,12 +30,14 @@ import {
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 )
 export class UserCommand extends Command {
-	@RegisterSubcommand((builder) =>
+	@RegisterSubcommand((builder) => {
 		builder
 			.setName("get")
 			.setDescription("Gets a guild's features")
-			.addStringOption(getGuildOption),
-	)
+			.addStringOption(getGuildOption);
+
+		return builder;
+	})
 	public async get(
 		interaction: Command.ChatInputInteraction,
 		options: Options,
@@ -41,24 +49,18 @@ export class UserCommand extends Command {
 			});
 		}
 
+		const id = BigInt(options.guild);
 		const data = await this.container.prisma.guild.findFirst({
-			where: { id: BigInt(options.guild) },
+			where: { id },
 		});
-		if (isNullish(data)) {
-			return interaction.reply({
-				content: "There is no data recorded for that guild.",
-				flags: MessageFlags.Ephemeral,
-			});
-		}
+		const limits = data ?? { id, ...getAllDefaults() };
 
 		const lines = [
-			`${bold("Guild ID")}: ${bold(blue(data.id.toString().padStart(19, " ")))}`,
-			`${bold("Maximum YouTube Subscriptions")}: ${formatRange(data.maximumYouTubeSubscriptions, 3, 10)}`,
-			`${bold("Maximum Twitch Subscriptions ")}: ${formatRange(data.maximumTwitchSubscriptions, 5, 20)}`,
-			`${bold("Maximum Filtered Words       ")}: ${formatRange(data.maximumFilteredWords, 50, 200)}`,
-			`${bold("Maximum Filtered Reactions   ")}: ${formatRange(data.maximumFilteredReactions, 50, 200)}`,
-			`${bold("Maximum Allowed Links        ")}: ${formatRange(data.maximumAllowedLinks, 25, 100)}`,
-			`${bold("Maximum Allowed Invite Codes ")}: ${formatRange(data.maximumAllowedInviteCodes, 25, 100)}`,
+			`${bold("Guild ID")}: ${bold(blue(limits.id.toString().padStart(19, " ")))}`,
+			...GuildLimitFields.map((field) => {
+				const definition = LimitDefinitions[field];
+				return `${bold(definition.label.padEnd(29))}: ${formatRange(limits[field], definition.min, definition.max)}`;
+			}),
 		];
 		return interaction.reply({
 			content: codeBlock("ansi", lines.join("\n")),
@@ -66,60 +68,26 @@ export class UserCommand extends Command {
 		});
 	}
 
-	@RegisterSubcommand((builder) =>
+	@RegisterSubcommand((builder) => {
 		builder
 			.setName("set")
 			.setDescription("Updates a guild's features")
-			.addStringOption(getGuildOption)
-			.addIntegerOption(
+			.addStringOption(getGuildOption);
+
+		for (const field of GuildLimitFields) {
+			const definition = LimitDefinitions[field];
+			builder.addIntegerOption(
 				getIntegerOption(
-					3,
-					10,
-					"maximum-youtube-subscriptions",
-					"(Staryl) The maximum amount of YouTube subscriptions",
+					definition.min,
+					definition.max,
+					definition.optionName,
+					definition.description,
 				),
-			)
-			.addIntegerOption(
-				getIntegerOption(
-					5,
-					20,
-					"maximum-twitch-subscriptions",
-					"(Staryl) The maximum amount of Twitch subscriptions",
-				),
-			)
-			.addIntegerOption(
-				getIntegerOption(
-					50,
-					200,
-					"maximum-filtered-words",
-					"(WolfStar) The maximum amount of filtered words",
-				),
-			)
-			.addIntegerOption(
-				getIntegerOption(
-					50,
-					200,
-					"maximum-filtered-reactions",
-					"(WolfStar) The maximum amount of filtered reactions",
-				),
-			)
-			.addIntegerOption(
-				getIntegerOption(
-					25,
-					100,
-					"maximum-allowed-links",
-					"(WolfStar) The maximum amount of allowed links",
-				),
-			)
-			.addIntegerOption(
-				getIntegerOption(
-					25,
-					100,
-					"maximum-allowed-invite-codes",
-					"(WolfStar) The maximum amount of allowed invite codes",
-				),
-			),
-	)
+			);
+		}
+
+		return builder;
+	})
 	public async set(
 		interaction: Command.ChatInputInteraction,
 		options: SetOptions,
@@ -132,14 +100,12 @@ export class UserCommand extends Command {
 		}
 
 		const id = BigInt(options.guild);
-		const data = {
-			maximumYouTubeSubscriptions: options["maximum-youtube-subscriptions"],
-			maximumTwitchSubscriptions: options["maximum-twitch-subscriptions"],
-			maximumFilteredWords: options["maximum-filtered-words"],
-			maximumFilteredReactions: options["maximum-filtered-reactions"],
-			maximumAllowedLinks: options["maximum-allowed-links"],
-			maximumAllowedInviteCodes: options["maximum-allowed-invite-codes"],
-		};
+		const data = Object.fromEntries(
+			GuildLimitFields.map((field) => [
+				field,
+				options[LimitDefinitions[field].optionName as keyof SetOptions],
+			]),
+		);
 		try {
 			await this.container.prisma.guild.upsert({
 				where: { id },
@@ -194,14 +160,11 @@ interface Options {
 	guild: string;
 }
 
-interface SetOptions extends Options {
-	"maximum-youtube-subscriptions"?: number;
-	"maximum-twitch-subscriptions"?: number;
-	"maximum-filtered-words"?: number;
-	"maximum-filtered-reactions"?: number;
-	"maximum-allowed-links"?: number;
-	"maximum-allowed-invite-codes"?: number;
-}
+type SetOptionName = (typeof LimitDefinitions)[GuildLimitField]["optionName"];
+
+type SetOptions = Options & {
+	[K in SetOptionName]?: number;
+};
 
 function getGuildOption() {
 	return new SlashCommandStringOption()

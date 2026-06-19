@@ -1,26 +1,24 @@
-import type { RolldownPluginOption } from "rolldown";
 // oxlint-disable no-underscore-dangle
+import type { Rolldown } from "tsdown";
 import { existsSync, mkdirSync, cpSync } from "node:fs";
-import { resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import alias from "@rollup/plugin-alias";
 import { defineConfig } from "tsdown";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 function resolveSource(base: string, subPath: string): string {
-	if (subPath.endsWith(".ts")) return resolve(__dirname, base, subPath);
-	return resolve(__dirname, base, `${subPath}.ts`);
+	if (subPath.endsWith(".ts"))
+		return resolve(import.meta.dirname, base, subPath);
+	const direct = resolve(import.meta.dirname, base, `${subPath}.ts`);
+	if (existsSync(direct)) return direct;
+	return resolve(import.meta.dirname, base, subPath, "index.ts");
 }
 
-// Plugin to copy .mjs files from src to dist
-function copyPlugin(): RolldownPluginOption {
+function copyPlugin(): Rolldown.RolldownPluginOption {
 	return {
 		name: "copy-mjs-files",
 		buildEnd() {
-			const srcDir = resolve(__dirname, "src/locales");
-			const distLocalesDir = resolve(__dirname, "dist/locales");
+			const srcDir = resolve(import.meta.dirname, "src/locales");
+			const distLocalesDir = resolve(import.meta.dirname, "dist/locales");
 
 			if (existsSync(srcDir)) {
 				mkdirSync(distLocalesDir, { recursive: true });
@@ -47,7 +45,10 @@ export default defineConfig({
 				},
 				{
 					find: "#generated/prisma",
-					replacement: resolve(__dirname, "src/generated/prisma/client.ts"),
+					replacement: resolve(
+						import.meta.dirname,
+						"src/generated/prisma/client.ts",
+					),
 				},
 				{
 					find: "#api",
@@ -57,11 +58,29 @@ export default defineConfig({
 						return resolveSource("src/api", subPath);
 					},
 				},
+				{
+					find: "#common",
+					replacement: "#common",
+					customResolver(source) {
+						const subPath = source.replace("#common/", "");
+						return resolveSource("src/lib/common", subPath);
+					},
+				},
+				{
+					find: "#types",
+					replacement: "#types",
+					customResolver(source) {
+						if (source === "#types")
+							return resolve(import.meta.dirname, "src/lib/types/index.ts");
+						const subPath = source.replace("#types/", "");
+						return resolveSource("src/lib/types", subPath);
+					},
+				},
 			],
 		}),
 		copyPlugin(),
 	],
-	dts: false,
+	dts: true,
 	unbundle: true,
 	sourcemap: true,
 	minify: false,

@@ -7,6 +7,7 @@ datasource db {
   provider = "postgresql"
 }
 
+// Default values must stay in sync with src/lib/common/limits.ts (LimitDefinitions).
 model Guild {
   id                          BigInt @id
   /// The maximum amount of YouTube subscriptions.

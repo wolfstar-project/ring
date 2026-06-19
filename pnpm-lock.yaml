@@ -24,31 +24,31 @@ importers:
         version: 7.8.0
       '@prisma/client':
         specifier: ^7.8.0
-        version: 7.8.0(prisma@7.8.0)(typescript@5.4.5)
+        version: 7.8.0(prisma@7.8.0)(typescript@5.9.3)
       '@sapphire/result':
         specifier: ^2.8.0
         version: 2.8.0
       '@sapphire/utilities':
         specifier: ^3.18.2
         version: 3.18.2
-      '@skyra/env-utilities':
-        specifier: ^2.0.1
-        version: 2.0.1
-      '@skyra/http-framework':
-        specifier: ^2.2.1
-        version: 2.2.1
-      '@skyra/http-framework-i18n':
-        specifier: ^1.2.1
-        version: 1.2.1
-      '@skyra/logger':
-        specifier: ^2.0.4
-        version: 2.0.4
-      '@skyra/shared-http-pieces':
-        specifier: ^1.2.3
-        version: 1.2.3
-      '@skyra/start-banner':
-        specifier: ^2.0.2
-        version: 2.0.2
+      '@wolfstar/env-utilities':
+        specifier: ^3.0.1
+        version: 3.0.1
+      '@wolfstar/http-framework':
+        specifier: ^3.0.1
+        version: 3.0.1
+      '@wolfstar/http-framework-i18n':
+        specifier: ^3.0.1
+        version: 3.0.1
+      '@wolfstar/logger':
+        specifier: ^3.0.1
+        version: 3.0.1
+      '@wolfstar/shared-http-pieces':
+        specifier: ^3.0.1
+        version: 3.0.1
+      '@wolfstar/start-banner':
+        specifier: ^3.0.1
+        version: 3.0.1
       discord-api-types:
         specifier: ^0.38.47
         version: 0.38.47
@@ -70,7 +70,7 @@ importers:
     devDependencies:
       '@commitlint/cli':
         specifier: ^21.0.2
-        version: 21.0.2(@types/node@24.13.2)(conventional-commits-parser@6.4.0)(typescript@5.4.5)
+        version: 21.0.2(@types/node@24.13.2)(conventional-commits-parser@6.4.0)(typescript@5.9.3)
       '@commitlint/config-conventional':
         specifier: ^21.0.2
         version: 21.0.2
@@ -91,7 +91,7 @@ importers:
         version: 24.13.2
       cz-conventional-changelog:
         specifier: ^3.3.0
-        version: 3.3.0(@types/node@24.13.2)(typescript@5.4.5)
+        version: 3.3.0(@types/node@24.13.2)(typescript@5.9.3)
       eslint:
         specifier: ^10.5.0
         version: 10.5.0(jiti@2.6.1)
@@ -106,16 +106,16 @@ importers:
         version: 1.70.0
       prisma:
         specifier: ^7.8.0
-        version: 7.8.0(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)(typescript@5.4.5)
+        version: 7.8.0(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)(typescript@5.9.3)
       taze:
         specifier: ^19.14.1
         version: 19.14.1
       tsdown:
         specifier: ^0.22.3
-        version: 0.22.3(typescript@5.4.5)(unrun@0.2.37)
+        version: 0.22.3(typescript@5.9.3)(unrun@0.2.37)
       typescript:
-        specifier: ~5.4.5
-        version: 5.4.5
+        specifier: ~5.9.3
+        version: 5.9.3
 
 packages:
 
@@ -1299,34 +1299,6 @@ packages:
     resolution: {integrity: sha512-KxXvfapcixpz6rVEB6HPjOUZT22yN6v0vI0urQSk1L8MlEWPDFCZkhw2xmkyoTGYeFw7tWTZd7e3lVzRZRN/EA==}
     engines: {node: '>=18'}
 
-  '@skyra/env-utilities@2.0.1':
-    resolution: {integrity: sha512-WEWKE0Acud4nll6pcOxDxmLBG6Zjusd9V2xCfOJsYF2NlmaWjiaiKL3ofS+9ZjMinR+QXRxaJAZ1LXh/1des3w==}
-    engines: {node: '>=18'}
-
-  '@skyra/http-framework-i18n@1.2.1':
-    resolution: {integrity: sha512-8t3sMbbPHw8VNO/d6bitnCipSp2XqZ+ngAl3T9VZnJ1yOkrjQRz1AWXZy45LPzIlxn+F2D3nZegUtObFgFYsMA==}
-    engines: {node: '>=18'}
-
-  '@skyra/http-framework@2.2.1':
-    resolution: {integrity: sha512-k4KH6l215A9tyXKBd6VRY6pkPbDiQkTr16Y+mtW1tcmFWLQ1CCj8lVtwdAiQxk/6+TQMET4OETwVuQGMVqfulw==}
-    engines: {node: '>=18'}
-
-  '@skyra/i18next-backend@2.0.6':
-    resolution: {integrity: sha512-emMWpgHVsycYUobAcylJhBrVAOg/C8huAflam3xGtFSzeVGtjQ1jcEbBzmzDj5c0E+AUcz/QDI1JCnKsXHL1HQ==}
-    engines: {node: '>=18'}
-
-  '@skyra/logger@2.0.4':
-    resolution: {integrity: sha512-0Xjo/B+LSHuDBjgWrloc7hDRfdu7tQP8lFLhG0jiezOHZnLTCzzZhH6Wty7Ab5YsV5Bdqpgwri5lf0u3oncwbw==}
-    engines: {node: '>=18'}
-
-  '@skyra/shared-http-pieces@1.2.3':
-    resolution: {integrity: sha512-/4DVnmPBxESzMc9Ro0QmKnISCA8NOYCGcoKitYz2186ccd0rsnWI6EKzssRW9UTojzQbjAxaSKhSz7h6EF9VoQ==}
-    engines: {node: '>=16.9.0', npm: '>=8.0.0'}
-
-  '@skyra/start-banner@2.0.2':
-    resolution: {integrity: sha512-OKgw86yKbccrQjndhkpajaz86lsNgTBHhfXgpHxRf83tmbsyaEtlA7Snhs6kmXoakyCLIf8sONwTLqR4gGrhPg==}
-    engines: {node: '>=18'}
-
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
@@ -1381,6 +1353,34 @@ packages:
   '@vladfrangu/async_event_emitter@2.4.7':
     resolution: {integrity: sha512-Xfe6rpCTxSxfbswi/W/Pz7zp1WWSNn4A0eW4mLkQUewCrXXtMj31lCg+iQyTkh/CkusZSq9eDflu7tjEDXUY6g==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
+
+  '@wolfstar/env-utilities@3.0.1':
+    resolution: {integrity: sha512-kUI0oNN62Snp1WvaIyeXGXZ2kQcjmurmKr6xYiu2E71ocJly73GacLdikoDRqn44bOJtUOyJnwtg3dBVkifQwQ==}
+    engines: {node: '>=18'}
+
+  '@wolfstar/http-framework-i18n@3.0.1':
+    resolution: {integrity: sha512-wSxWgFvgKviKfnalSUduG6cSQ0F0i9GCHemxyp1AZepQsvtu5nHQfHj8F9y+SblQ/0K+xp8I/xVYczRmYWjSKA==}
+    engines: {node: '>=18'}
+
+  '@wolfstar/http-framework@3.0.1':
+    resolution: {integrity: sha512-0kumXat6pWt8bsZK/RB5srRK+YuZAZBxRDs9wOQYexq1gmQWmIKY6izsR1bmidY7TvTVS732USNGlynsR4sXpw==}
+    engines: {node: '>=18'}
+
+  '@wolfstar/i18next-backend@3.0.1':
+    resolution: {integrity: sha512-z5AHBJj7p6lLYth/bMRqzfuQEY9BXVKW/HMC8mcnrvRKmDmbXgXIrg9u+WiZyQEjXn7OoYTMA5HYiJRe68zgnQ==}
+    engines: {node: '>=18'}
+
+  '@wolfstar/logger@3.0.1':
+    resolution: {integrity: sha512-IWS/Tb6tyFvrl0dv+T86Jjw6RdNdNPBloWhOQmXV4tasHqPpxfPVaUWYgZka1kTmLxPGEb6GlqY/JAWa/XMHYg==}
+    engines: {node: '>=18'}
+
+  '@wolfstar/shared-http-pieces@3.0.1':
+    resolution: {integrity: sha512-shwMvnmBt1WnfLAPC2ZbOr5zeITap4SPWOsN8KbxFOu1w1QIsgPIOd/0gYVLi5IoafFovUwZuB59CQxE+t5OsQ==}
+    engines: {node: '>=16.9.0', npm: '>=8.0.0'}
+
+  '@wolfstar/start-banner@3.0.1':
+    resolution: {integrity: sha512-Q1mRxbRMrHoVn6EOuxT4AzoR9fmknt7XkgqeF7yGVvcBxwaQmm5J6e63f+++JMbjsttfXcrRLqRVWHQ+WhvDLQ==}
+    engines: {node: '>=18'}
 
   abstract-logging@2.0.1:
     resolution: {integrity: sha512-2BjRTZxTPvheOvGbBslFSYOUkr+SjPtOnrLP33f+VIWLzezQpZcqVg7ja3L4dBXmzzgwT+a029jRx5PCi3JuiA==}
@@ -2843,6 +2843,11 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
 
@@ -2983,11 +2988,11 @@ snapshots:
       '@babel/helper-string-parser': 8.0.0
       '@babel/helper-validator-identifier': 8.0.0
 
-  '@commitlint/cli@21.0.2(@types/node@24.13.2)(conventional-commits-parser@6.4.0)(typescript@5.4.5)':
+  '@commitlint/cli@21.0.2(@types/node@24.13.2)(conventional-commits-parser@6.4.0)(typescript@5.9.3)':
     dependencies:
       '@commitlint/format': 21.0.1
       '@commitlint/lint': 21.0.2
-      '@commitlint/load': 21.0.2(@types/node@24.13.2)(typescript@5.4.5)
+      '@commitlint/load': 21.0.2(@types/node@24.13.2)(typescript@5.9.3)
       '@commitlint/read': 21.0.2(conventional-commits-parser@6.4.0)
       '@commitlint/types': 21.0.1
       tinyexec: 1.2.4
@@ -3041,14 +3046,14 @@ snapshots:
       '@commitlint/rules': 21.0.2
       '@commitlint/types': 21.0.1
 
-  '@commitlint/load@20.5.3(@types/node@24.13.2)(typescript@5.4.5)':
+  '@commitlint/load@20.5.3(@types/node@24.13.2)(typescript@5.9.3)':
     dependencies:
       '@commitlint/config-validator': 20.5.0
       '@commitlint/execute-rule': 20.0.0
       '@commitlint/resolve-extends': 20.5.3
       '@commitlint/types': 20.5.0
-      cosmiconfig: 9.0.1(typescript@5.4.5)
-      cosmiconfig-typescript-loader: 6.3.0(@types/node@24.13.2)(cosmiconfig@9.0.1)(typescript@5.4.5)
+      cosmiconfig: 9.0.1(typescript@5.9.3)
+      cosmiconfig-typescript-loader: 6.3.0(@types/node@24.13.2)(cosmiconfig@9.0.1)(typescript@5.9.3)
       es-toolkit: 1.46.1
       is-plain-obj: 4.1.0
       picocolors: 1.1.1
@@ -3057,14 +3062,14 @@ snapshots:
       - typescript
     optional: true
 
-  '@commitlint/load@21.0.2(@types/node@24.13.2)(typescript@5.4.5)':
+  '@commitlint/load@21.0.2(@types/node@24.13.2)(typescript@5.9.3)':
     dependencies:
       '@commitlint/config-validator': 21.0.1
       '@commitlint/execute-rule': 21.0.1
       '@commitlint/resolve-extends': 21.0.1
       '@commitlint/types': 21.0.1
-      cosmiconfig: 9.0.1(typescript@5.4.5)
-      cosmiconfig-typescript-loader: 6.3.0(@types/node@24.13.2)(cosmiconfig@9.0.1)(typescript@5.4.5)
+      cosmiconfig: 9.0.1(typescript@5.9.3)
+      cosmiconfig-typescript-loader: 6.3.0(@types/node@24.13.2)(cosmiconfig@9.0.1)(typescript@5.9.3)
       es-toolkit: 1.46.1
       is-plain-obj: 4.1.0
       picocolors: 1.1.1
@@ -3430,7 +3435,7 @@ snapshots:
       '@opentelemetry/instrumentation': 0.57.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/semantic-conventions': 1.28.0
       forwarded-parse: 2.1.2
-      semver: 7.7.4
+      semver: 7.8.4
     transitivePeerDependencies:
       - supports-color
 
@@ -3563,7 +3568,7 @@ snapshots:
       '@types/shimmer': 1.2.0
       import-in-the-middle: 1.15.0
       require-in-the-middle: 7.5.2
-      semver: 7.7.4
+      semver: 7.8.4
       shimmer: 1.2.1
     transitivePeerDependencies:
       - supports-color
@@ -3575,7 +3580,7 @@ snapshots:
       '@types/shimmer': 1.2.0
       import-in-the-middle: 1.15.0
       require-in-the-middle: 7.5.2
-      semver: 7.7.4
+      semver: 7.8.4
       shimmer: 1.2.1
     transitivePeerDependencies:
       - supports-color
@@ -3587,7 +3592,7 @@ snapshots:
       '@types/shimmer': 1.2.0
       import-in-the-middle: 1.15.0
       require-in-the-middle: 7.5.2
-      semver: 7.7.4
+      semver: 7.8.4
       shimmer: 1.2.1
     transitivePeerDependencies:
       - supports-color
@@ -3753,12 +3758,12 @@ snapshots:
 
   '@prisma/client-runtime-utils@7.8.0': {}
 
-  '@prisma/client@7.8.0(prisma@7.8.0)(typescript@5.4.5)':
+  '@prisma/client@7.8.0(prisma@7.8.0)(typescript@5.9.3)':
     dependencies:
       '@prisma/client-runtime-utils': 7.8.0
     optionalDependencies:
-      prisma: 7.8.0(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)(typescript@5.4.5)
-      typescript: 5.4.5
+      prisma: 7.8.0(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)(typescript@5.9.3)
+      typescript: 5.9.3
 
   '@prisma/config@7.8.0':
     dependencies:
@@ -3773,7 +3778,7 @@ snapshots:
 
   '@prisma/debug@7.8.0': {}
 
-  '@prisma/dev@0.24.3(typescript@5.4.5)':
+  '@prisma/dev@0.24.3(typescript@5.9.3)':
     dependencies:
       '@electric-sql/pglite': 0.4.1
       '@electric-sql/pglite-socket': 0.1.1(@electric-sql/pglite@0.4.1)
@@ -3790,7 +3795,7 @@ snapshots:
       proper-lockfile: 4.1.2
       remeda: 2.33.4
       std-env: 3.10.0
-      valibot: 1.2.0(typescript@5.4.5)
+      valibot: 1.2.0(typescript@5.9.3)
       zeptomatch: 2.1.0
     transitivePeerDependencies:
       - typescript
@@ -4094,55 +4099,6 @@ snapshots:
 
   '@simple-libs/stream-utils@1.2.0': {}
 
-  '@skyra/env-utilities@2.0.1':
-    dependencies:
-      dotenv: 16.6.1
-      dotenv-expand: 12.0.3
-
-  '@skyra/http-framework-i18n@1.2.1':
-    dependencies:
-      '@discordjs/collection': 2.1.1
-      '@sapphire/utilities': 3.18.2
-      '@skyra/i18next-backend': 2.0.6
-      discord-api-types: 0.38.47
-      i18next: 22.5.1
-      tslib: 2.8.1
-
-  '@skyra/http-framework@2.2.1':
-    dependencies:
-      '@discordjs/builders': 1.14.1
-      '@discordjs/collection': 2.1.1
-      '@discordjs/rest': 2.6.1
-      '@discordjs/util': 1.2.0
-      '@sapphire/pieces': 4.4.1
-      '@sapphire/result': 2.8.0
-      '@sapphire/utilities': 3.18.2
-      '@vladfrangu/async_event_emitter': 2.4.7
-      discord-api-types: 0.38.47
-
-  '@skyra/i18next-backend@2.0.6':
-    dependencies:
-      tslib: 2.8.1
-
-  '@skyra/logger@2.0.4':
-    dependencies:
-      colorette: 2.0.20
-
-  '@skyra/shared-http-pieces@1.2.3':
-    dependencies:
-      '@discordjs/builders': 1.14.1
-      '@discordjs/collection': 2.1.1
-      '@sentry/node': 8.55.2
-      '@skyra/env-utilities': 2.0.1
-      '@skyra/http-framework': 2.2.1
-      '@skyra/http-framework-i18n': 1.2.1
-      discord-api-types: 0.38.47
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - supports-color
-
-  '@skyra/start-banner@2.0.2': {}
-
   '@standard-schema/spec@1.1.0': {}
 
   '@tybys/wasm-util@0.10.2':
@@ -4176,7 +4132,7 @@ snapshots:
 
   '@types/pg-pool@2.0.6':
     dependencies:
-      '@types/pg': 8.6.1
+      '@types/pg': 8.20.0
 
   '@types/pg@8.20.0':
     dependencies:
@@ -4203,6 +4159,55 @@ snapshots:
   '@types/tinycolor2@1.4.6': {}
 
   '@vladfrangu/async_event_emitter@2.4.7': {}
+
+  '@wolfstar/env-utilities@3.0.1':
+    dependencies:
+      dotenv: 17.4.2
+      dotenv-expand: 12.0.3
+
+  '@wolfstar/http-framework-i18n@3.0.1':
+    dependencies:
+      '@discordjs/collection': 2.1.1
+      '@sapphire/utilities': 3.18.2
+      '@wolfstar/i18next-backend': 3.0.1
+      discord-api-types: 0.38.47
+      i18next: 22.5.1
+      tslib: 2.8.1
+
+  '@wolfstar/http-framework@3.0.1':
+    dependencies:
+      '@discordjs/builders': 1.14.1
+      '@discordjs/collection': 2.1.1
+      '@discordjs/rest': 2.6.1
+      '@discordjs/util': 1.2.0
+      '@sapphire/pieces': 4.4.1
+      '@sapphire/result': 2.8.0
+      '@sapphire/utilities': 3.18.2
+      '@vladfrangu/async_event_emitter': 2.4.7
+      discord-api-types: 0.38.47
+
+  '@wolfstar/i18next-backend@3.0.1':
+    dependencies:
+      tslib: 2.8.1
+
+  '@wolfstar/logger@3.0.1':
+    dependencies:
+      colorette: 2.0.20
+
+  '@wolfstar/shared-http-pieces@3.0.1':
+    dependencies:
+      '@discordjs/builders': 1.14.1
+      '@discordjs/collection': 2.1.1
+      '@sentry/node': 8.55.2
+      '@wolfstar/env-utilities': 3.0.1
+      '@wolfstar/http-framework': 3.0.1
+      '@wolfstar/http-framework-i18n': 3.0.1
+      discord-api-types: 0.38.47
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@wolfstar/start-banner@3.0.1': {}
 
   abstract-logging@2.0.1: {}
 
@@ -4385,10 +4390,10 @@ snapshots:
 
   comment-parser@1.4.6: {}
 
-  commitizen@4.3.1(@types/node@24.13.2)(typescript@5.4.5):
+  commitizen@4.3.1(@types/node@24.13.2)(typescript@5.9.3):
     dependencies:
       cachedir: 2.3.0
-      cz-conventional-changelog: 3.3.0(@types/node@24.13.2)(typescript@5.4.5)
+      cz-conventional-changelog: 3.3.0(@types/node@24.13.2)(typescript@5.9.3)
       dedent: 0.7.0
       detect-indent: 6.1.0
       find-node-modules: 2.1.3
@@ -4431,21 +4436,21 @@ snapshots:
 
   cookie@1.1.1: {}
 
-  cosmiconfig-typescript-loader@6.3.0(@types/node@24.13.2)(cosmiconfig@9.0.1)(typescript@5.4.5):
+  cosmiconfig-typescript-loader@6.3.0(@types/node@24.13.2)(cosmiconfig@9.0.1)(typescript@5.9.3):
     dependencies:
       '@types/node': 24.13.2
-      cosmiconfig: 9.0.1(typescript@5.4.5)
+      cosmiconfig: 9.0.1(typescript@5.9.3)
       jiti: 2.6.1
-      typescript: 5.4.5
+      typescript: 5.9.3
 
-  cosmiconfig@9.0.1(typescript@5.4.5):
+  cosmiconfig@9.0.1(typescript@5.9.3):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
       js-yaml: 4.1.1
       parse-json: 5.2.0
     optionalDependencies:
-      typescript: 5.4.5
+      typescript: 5.9.3
 
   cross-spawn@7.0.6:
     dependencies:
@@ -4455,16 +4460,16 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  cz-conventional-changelog@3.3.0(@types/node@24.13.2)(typescript@5.4.5):
+  cz-conventional-changelog@3.3.0(@types/node@24.13.2)(typescript@5.9.3):
     dependencies:
       chalk: 2.4.2
-      commitizen: 4.3.1(@types/node@24.13.2)(typescript@5.4.5)
+      commitizen: 4.3.1(@types/node@24.13.2)(typescript@5.9.3)
       conventional-commit-types: 3.0.0
       lodash.map: 4.6.0
       longest: 2.0.1
       word-wrap: 1.2.5
     optionalDependencies:
-      '@commitlint/load': 20.5.3(@types/node@24.13.2)(typescript@5.4.5)
+      '@commitlint/load': 20.5.3(@types/node@24.13.2)(typescript@5.9.3)
     transitivePeerDependencies:
       - '@types/node'
       - typescript
@@ -5276,16 +5281,16 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prisma@7.8.0(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)(typescript@5.4.5):
+  prisma@7.8.0(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)(typescript@5.9.3):
     dependencies:
       '@prisma/config': 7.8.0
-      '@prisma/dev': 0.24.3(typescript@5.4.5)
+      '@prisma/dev': 0.24.3(typescript@5.9.3)
       '@prisma/engines': 7.8.0
       '@prisma/studio-core': 0.27.3(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)
       mysql2: 3.15.3
       postgres: 3.4.7
     optionalDependencies:
-      typescript: 5.4.5
+      typescript: 5.9.3
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -5390,7 +5395,7 @@ snapshots:
 
   rfdc@1.4.1: {}
 
-  rolldown-plugin-dts@0.26.0(rolldown@1.1.1)(typescript@5.4.5):
+  rolldown-plugin-dts@0.26.0(rolldown@1.1.1)(typescript@5.9.3):
     dependencies:
       '@babel/generator': 8.0.0
       '@babel/helper-validator-identifier': 8.0.0
@@ -5402,7 +5407,7 @@ snapshots:
       obug: 2.1.3
       rolldown: 1.1.1
     optionalDependencies:
-      typescript: 5.4.5
+      typescript: 5.9.3
     transitivePeerDependencies:
       - oxc-resolver
 
@@ -5606,7 +5611,7 @@ snapshots:
 
   ts-mixer@6.0.4: {}
 
-  tsdown@0.22.3(typescript@5.4.5)(unrun@0.2.37):
+  tsdown@0.22.3(typescript@5.9.3)(unrun@0.2.37):
     dependencies:
       ansis: 4.3.1
       cac: 7.0.0
@@ -5617,14 +5622,14 @@ snapshots:
       obug: 2.1.3
       picomatch: 4.0.4
       rolldown: 1.1.1
-      rolldown-plugin-dts: 0.26.0(rolldown@1.1.1)(typescript@5.4.5)
+      rolldown-plugin-dts: 0.26.0(rolldown@1.1.1)(typescript@5.9.3)
       semver: 7.8.4
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tree-kill: 1.2.2
       unconfig-core: 7.5.0
     optionalDependencies:
-      typescript: 5.4.5
+      typescript: 5.9.3
       unrun: 0.2.37(synckit@0.11.11)
     transitivePeerDependencies:
       - '@ts-macro/tsc'
@@ -5641,6 +5646,8 @@ snapshots:
   type-fest@0.21.3: {}
 
   typescript@5.4.5: {}
+
+  typescript@5.9.3: {}
 
   ufo@1.6.4: {}
 
@@ -5676,9 +5683,9 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  valibot@1.2.0(typescript@5.4.5):
+  valibot@1.2.0(typescript@5.9.3):
     optionalDependencies:
-      typescript: 5.4.5
+      typescript: 5.9.3
 
   wcwidth@1.0.1:
     dependencies:

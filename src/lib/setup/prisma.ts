@@ -1,6 +1,6 @@
 import { PrismaClient } from "#generated/prisma";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { container } from "@skyra/http-framework";
+import { container } from "@wolfstar/http-framework";
 
 const adapter = new PrismaPg({
 	connectionString: `${process.env.DATABASE_URL}`,
@@ -8,8 +8,10 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 container.prisma = prisma;
 
+export type { Guild } from "#generated/prisma";
+
 declare module "@sapphire/pieces" {
 	interface Container {
-		prisma: typeof prisma;
+		prisma: PrismaClient;
 	}
 }

@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, cpSync } from "node:fs";
 import { resolve } from "node:path";
 import alias from "@rollup/plugin-alias";
 import { defineConfig } from "tsdown";
+import { startTunnel } from "untun";
 
 function resolveSource(base: string, subPath: string): string {
 	if (subPath.endsWith(".ts"))
@@ -13,6 +14,7 @@ function resolveSource(base: string, subPath: string): string {
 	return resolve(import.meta.dirname, base, subPath, "index.ts");
 }
 
+// Plugin to copy locales from src to dist
 function copyPlugin(): Rolldown.RolldownPluginOption {
 	return {
 		name: "copy-mjs-files",
@@ -24,6 +26,53 @@ function copyPlugin(): Rolldown.RolldownPluginOption {
 				mkdirSync(distLocalesDir, { recursive: true });
 				cpSync(srcDir, distLocalesDir, { recursive: true });
 				console.log("✓ Copied locales to dist");
+			}
+		},
+	};
+}
+
+const isTunnelEnabled =
+	process.argv.includes("--tunnel") ||
+	process.env["TUNNEL"] === "1" ||
+	process.env["TUNNEL"] === "true";
+
+function parsePort(value: string | undefined, fallback: number): number {
+	if (value === undefined) return fallback;
+	const parsed = Number(value);
+	if (!Number.isFinite(parsed) || parsed <= 0) {
+		console.error(
+			`[dev-tunnel] Invalid HTTP_PORT "${value}", falling back to ${String(fallback)}`,
+		);
+		return fallback;
+	}
+	return parsed;
+}
+
+function startDevTunnel(): Rolldown.RolldownPluginOption {
+	let started = false;
+	return {
+		name: "dev-tunnel",
+		async buildEnd() {
+			if (!isTunnelEnabled || started) return;
+			const port = parsePort(process.env["HTTP_PORT"], 3000);
+			try {
+				const tunnel = await startTunnel({
+					port,
+					acceptCloudflareNotice: true,
+				});
+				if (!tunnel) {
+					console.error("[dev-tunnel] Failed to start tunnel");
+					return;
+				}
+				const url = await tunnel.getURL();
+				if (!url) {
+					console.error("[dev-tunnel] Tunnel started but URL was not assigned");
+					return;
+				}
+				console.log(`✓ Tunnel ready at ${url}`);
+				started = true;
+			} catch (error) {
+				console.error("[dev-tunnel] Tunnel startup failed:", error);
 			}
 		},
 	};
@@ -51,6 +100,16 @@ export default defineConfig({
 					),
 				},
 				{
+					find: "#i18n",
+					replacement: "#i18n",
+					customResolver(source) {
+						if (source === "#i18n")
+							return resolve(import.meta.dirname, "src/lib/i18n/index.ts");
+						const subPath = source.replace("#i18n/", "");
+						return resolveSource("src/lib/i18n", subPath);
+					},
+				},
+				{
 					find: "#api",
 					replacement: "#api",
 					customResolver(source) {
@@ -76,9 +135,18 @@ export default defineConfig({
 						return resolveSource("src/lib/types", subPath);
 					},
 				},
+				{
+					find: "#utils",
+					replacement: "#utils",
+					customResolver(source) {
+						const subPath = source.replace("#utils/", "");
+						return resolveSource("src/lib/utilities", subPath);
+					},
+				},
 			],
 		}),
 		copyPlugin(),
+		...(isTunnelEnabled ? [startDevTunnel()] : []),
 	],
 	dts: true,
 	unbundle: true,

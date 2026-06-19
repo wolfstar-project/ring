@@ -31,3 +31,6 @@ package-lock.json
 
 # Plans
 plans/
+
+# Pnpm store
+.pnpm-store

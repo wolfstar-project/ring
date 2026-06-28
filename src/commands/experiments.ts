@@ -375,7 +375,10 @@ export class UserCommand extends Command {
 				break;
 			case "active":
 				where.enabled = true;
-				where.OR = [{ endDate: null }, { endDate: { gte: now } }];
+				where.AND = [
+					{ OR: [{ startDate: null }, { startDate: { lte: now } }] },
+					{ OR: [{ endDate: null }, { endDate: { gte: now } }] },
+				];
 				break;
 			default:
 				break;

@@ -60,6 +60,12 @@ export class UserCommand extends Command {
 		if (startDate === Invalid || endDate === Invalid) {
 			return this.reply(interaction, "One of the provided dates is invalid.");
 		}
+		if (startDate && endDate && endDate < startDate) {
+			return this.reply(
+				interaction,
+				"The end date cannot be before the start date.",
+			);
+		}
 
 		const botId = normalizeOptional(options["bot-id"]);
 		const id = buildExperimentKey({
@@ -120,6 +126,27 @@ export class UserCommand extends Command {
 		const endDate = parseEditableDate(options["end-date"]);
 		if (endDate === Invalid) {
 			return this.reply(interaction, "The provided end date is invalid.");
+		}
+
+		// A concrete new end date must not fall before the stored start date,
+		// which would invert the schedule window (expired before it starts).
+		if (endDate instanceof Date) {
+			const existing = await this.container.prisma.experiment.findUnique({
+				where: { id: options.experiment },
+				select: { startDate: true },
+			});
+			if (isNullish(existing)) {
+				return this.reply(
+					interaction,
+					`I could not edit \`${options.experiment}\`; it may not exist.`,
+				);
+			}
+			if (existing.startDate && endDate < existing.startDate) {
+				return this.reply(
+					interaction,
+					"The end date cannot be before the experiment's start date.",
+				);
+			}
 		}
 
 		const data: Prisma.ExperimentUpdateInput = {

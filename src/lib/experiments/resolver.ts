@@ -27,6 +27,18 @@ export async function resolveExperiment(
 		return { bucket: ExperimentBucket.NotEligible, source: "disabled" };
 	}
 
+	// Step 1b — entity-type scope guard. A GUILD- or USER-scoped experiment must
+	// only resolve for the matching entity class (`BOTH` matches either).
+	// Without this, a scope mismatch would skip the override lookup below and
+	// fall through to a hash assignment for the wrong class of entity.
+	const entityTypeEnum = entityType === "guild" ? "GUILD" : "USER";
+	if (
+		experiment.entityType !== "BOTH" &&
+		experiment.entityType !== entityTypeEnum
+	) {
+		return { bucket: ExperimentBucket.NotEligible, source: "disabled" };
+	}
+
 	// Step 2 — scheduling window.
 	const now = new Date();
 	if (experiment.startDate && experiment.startDate > now) {
@@ -41,7 +53,7 @@ export async function resolveExperiment(
 		where: {
 			experimentId_entityType_entityId: {
 				experimentId: experimentKey,
-				entityType: entityType === "guild" ? "GUILD" : "USER",
+				entityType: entityTypeEnum,
 				entityId,
 			},
 		},

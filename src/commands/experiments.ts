@@ -11,11 +11,7 @@ import {
 	RegisterCommand,
 	RegisterSubcommand,
 } from "@wolfstar/http-framework";
-import {
-	ApplicationIntegrationType,
-	MessageFlags,
-	PermissionFlagsBits,
-} from "discord-api-types/v10";
+import { ApplicationIntegrationType, MessageFlags } from "discord-api-types/v10";
 
 const Categories = [
 	"moderation",
@@ -30,7 +26,10 @@ const Categories = [
 		.setName("experiments")
 		.setDescription("Manage WolfStar Network feature-flag experiments")
 		.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
+		// Owner-only command (every subcommand is gated by `isOwner`). `0n`
+		// hides it from the Discord client UI for all non-admin members instead
+		// of advertising it to anyone with Manage Guild and rejecting at runtime.
+		.setDefaultMemberPermissions(0n),
 )
 export class UserCommand extends Command {
 	@RegisterSubcommand((builder) =>

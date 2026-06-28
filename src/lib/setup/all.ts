@@ -7,6 +7,7 @@ import {
 /* oxlint-disable import/first */
 import "#lib/setup/logger";
 import "#lib/setup/prisma";
+import "#lib/setup/experiments";
 import "#lib/setup/fastify";
 import "@wolfstar/shared-http-pieces/register";
 

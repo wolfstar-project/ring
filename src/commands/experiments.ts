@@ -56,7 +56,8 @@ export class UserCommand extends Command {
 		interaction: Command.ChatInputInteraction,
 		options: CreateOptions,
 	) {
-		if (!this.isOwner(interaction)) return this.denied(interaction);
+		if (!UserCommand.ClientOwners.includes(interaction.user.id))
+			return this.denied(interaction);
 
 		const startDate = parseDate(options["start-date"]);
 		const endDate = parseDate(options["end-date"]);
@@ -78,19 +79,17 @@ export class UserCommand extends Command {
 		});
 
 		try {
-			await this.container.prisma.experiment.create({
-				data: {
-					id,
-					name: options.name,
-					description: normalizeOptional(options.description) ?? null,
-					category: options.category,
-					entityType: toEntityType(options["entity-type"]),
-					rollout: toRollout(options.rollout),
-					startDate,
-					endDate,
-					createdBy: interaction.user.id,
-					botId: botId ?? null,
-				},
+			await this.container.experiments.create({
+				id,
+				name: options.name,
+				description: normalizeOptional(options.description) ?? null,
+				category: options.category,
+				entityType: toEntityType(options["entity-type"]),
+				rollout: toRollout(options.rollout),
+				startDate,
+				endDate,
+				createdBy: interaction.user.id,
+				botId: botId ?? null,
 			});
 		} catch (error) {
 			this.container.logger.error(error);
@@ -124,7 +123,8 @@ export class UserCommand extends Command {
 		interaction: Command.ChatInputInteraction,
 		options: EditOptions,
 	) {
-		if (!this.isOwner(interaction)) return this.denied(interaction);
+		if (!UserCommand.ClientOwners.includes(interaction.user.id))
+			return this.denied(interaction);
 
 		const endDate = parseEditableDate(options["end-date"]);
 		if (endDate === Invalid) {
@@ -134,10 +134,9 @@ export class UserCommand extends Command {
 		// A concrete new end date must not fall before the stored start date,
 		// which would invert the schedule window (expired before it starts).
 		if (endDate instanceof Date) {
-			const existing = await this.container.prisma.experiment.findUnique({
-				where: { id: options.experiment },
-				select: { startDate: true },
-			});
+			const existing = await this.container.experiments.findById(
+				options.experiment,
+			);
 			if (isNullish(existing)) {
 				return this.reply(
 					interaction,
@@ -163,10 +162,7 @@ export class UserCommand extends Command {
 		};
 
 		try {
-			await this.container.prisma.experiment.update({
-				where: { id: options.experiment },
-				data,
-			});
+			await this.container.experiments.update(options.experiment, data);
 		} catch (error) {
 			this.container.logger.error(error);
 			return this.reply(
@@ -197,7 +193,8 @@ export class UserCommand extends Command {
 		interaction: Command.ChatInputInteraction,
 		options: DeleteOptions,
 	) {
-		if (!this.isOwner(interaction)) return this.denied(interaction);
+		if (!UserCommand.ClientOwners.includes(interaction.user.id))
+			return this.denied(interaction);
 
 		if (options.confirm !== options.experiment) {
 			return this.reply(
@@ -207,9 +204,7 @@ export class UserCommand extends Command {
 		}
 
 		try {
-			await this.container.prisma.experiment.delete({
-				where: { id: options.experiment },
-			});
+			await this.container.experiments.delete(options.experiment);
 		} catch (error) {
 			this.container.logger.error(error);
 			return this.reply(
@@ -275,23 +270,18 @@ export class UserCommand extends Command {
 		interaction: Command.ChatInputInteraction,
 		options: OverrideOptions,
 	) {
-		if (!this.isOwner(interaction)) return this.denied(interaction);
+		if (!UserCommand.ClientOwners.includes(interaction.user.id))
+			return this.denied(interaction);
 
 		const entityType = options["entity-type"] === "guild" ? "GUILD" : "USER";
 		const entityId = options["entity-id"];
-		const where = {
-			experimentId_entityType_entityId: {
-				experimentId: options.experiment,
-				entityType,
-				entityId,
-			},
-		};
 
 		if (options.action === "remove") {
-			const { count } =
-				await this.container.prisma.experimentOverride.deleteMany({
-					where: { experimentId: options.experiment, entityType, entityId },
-				});
+			const count = await this.container.experiments.removeOverride(
+				options.experiment,
+				entityType,
+				entityId,
+			);
 			const content =
 				count === 0
 					? "There was no override to remove."
@@ -310,10 +300,9 @@ export class UserCommand extends Command {
 		// Reject overrides whose entity type does not match the experiment's
 		// scope: the resolver's scope guard would never look them up, so they
 		// would silently never apply. `BOTH` accepts either entity type.
-		const experiment = await this.container.prisma.experiment.findUnique({
-			where: { id: options.experiment },
-			select: { entityType: true },
-		});
+		const experiment = await this.container.experiments.findById(
+			options.experiment,
+		);
 		if (isNullish(experiment)) {
 			return this.reply(
 				interaction,
@@ -331,21 +320,13 @@ export class UserCommand extends Command {
 		}
 
 		try {
-			await this.container.prisma.experimentOverride.upsert({
-				where,
-				create: {
-					experimentId: options.experiment,
-					entityType,
-					entityId,
-					bucket,
-					reason: normalizeOptional(options.reason) ?? null,
-					createdBy: interaction.user.id,
-				},
-				update: {
-					bucket,
-					reason: normalizeOptional(options.reason) ?? null,
-					createdBy: interaction.user.id,
-				},
+			await this.container.experiments.setOverride({
+				experimentId: options.experiment,
+				entityType,
+				entityId,
+				bucket,
+				reason: normalizeOptional(options.reason) ?? null,
+				createdBy: interaction.user.id,
 			});
 		} catch (error) {
 			this.container.logger.error(error);
@@ -389,7 +370,8 @@ export class UserCommand extends Command {
 		interaction: Command.ChatInputInteraction,
 		options: ListOptions,
 	) {
-		if (!this.isOwner(interaction)) return this.denied(interaction);
+		if (!UserCommand.ClientOwners.includes(interaction.user.id))
+			return this.denied(interaction);
 
 		const now = new Date();
 		const where: Prisma.ExperimentWhereInput = {};
@@ -416,10 +398,9 @@ export class UserCommand extends Command {
 
 		const page = Math.max(1, options.page ?? 1);
 		const [total, experiments] = await Promise.all([
-			this.container.prisma.experiment.count({ where }),
-			this.container.prisma.experiment.findMany({
+			this.container.experiments.count(where),
+			this.container.experiments.list({
 				where,
-				orderBy: { createdAt: "desc" },
 				skip: (page - 1) * ExperimentsPerPage,
 				take: ExperimentsPerPage,
 			}),
@@ -457,18 +438,19 @@ export class UserCommand extends Command {
 		interaction: Command.ChatInputInteraction,
 		options: InfoOptions,
 	) {
-		if (!this.isOwner(interaction)) return this.denied(interaction);
+		if (!UserCommand.ClientOwners.includes(interaction.user.id))
+			return this.denied(interaction);
 
-		const experiment = await this.container.prisma.experiment.findUnique({
-			where: { id: options.experiment },
-		});
+		const experiment = await this.container.experiments.findById(
+			options.experiment,
+		);
 		if (isNullish(experiment)) {
 			return this.reply(interaction, "That experiment does not exist.");
 		}
 
-		const overrideCount = await this.container.prisma.experimentOverride.count({
-			where: { experimentId: experiment.id },
-		});
+		const overrideCount = await this.container.experiments.countOverrides(
+			experiment.id,
+		);
 
 		const lines = [
 			`Key         : ${experiment.id}`,
@@ -486,10 +468,6 @@ export class UserCommand extends Command {
 			lines.push(`Description : ${experiment.description}`);
 		}
 		return this.reply(interaction, codeBlock(lines.join("\n")));
-	}
-
-	private isOwner(interaction: Command.ChatInputInteraction): boolean {
-		return UserCommand.ClientOwners.includes(interaction.user.id);
 	}
 
 	private denied(interaction: Command.ChatInputInteraction) {

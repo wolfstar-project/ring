@@ -11,7 +11,10 @@ import {
 	RegisterCommand,
 	RegisterSubcommand,
 } from "@wolfstar/http-framework";
-import { ApplicationIntegrationType, MessageFlags } from "discord-api-types/v10";
+import {
+	ApplicationIntegrationType,
+	MessageFlags,
+} from "discord-api-types/v10";
 
 const Categories = [
 	"moderation",

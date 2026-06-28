@@ -1,6 +1,11 @@
 import type { Experiment, ExperimentOverride, Prisma } from "#generated/prisma";
 import type { ResolveEntityType, ResolveOptions, ResolveResult } from "./types";
 import { container } from "@sapphire/pieces";
+import {
+	getCachedResolve,
+	invalidateExperimentCache,
+	setCachedResolve,
+} from "./cache";
 import { computePosition } from "./hash";
 import { ExperimentBucket } from "./types";
 
@@ -35,16 +40,59 @@ export class ExperimentManager {
 	}
 
 	/// Applies a partial update to an existing experiment.
-	public update(
+	public async update(
 		id: string,
 		data: Prisma.ExperimentUpdateInput,
 	): Promise<Experiment> {
-		return container.prisma.experiment.update({ where: { id }, data });
+		const experiment = await container.prisma.experiment.update({
+			where: { id },
+			data,
+		});
+		await invalidateExperimentCache(id);
+		return experiment;
+	}
+
+	/// Disables every experiment whose scheduling window has closed.
+	///
+	/// Finds experiments that are still `enabled` but whose `endDate` has
+	/// already passed and flips them to `enabled: false` via `update()`, so the
+	/// resolve cache is invalidated through the existing mutation path. Each row
+	/// is processed independently: a failed update is logged and skipped so one
+	/// bad row never blocks the rest. Returns the count and ids actually
+	/// disabled for the caller to log.
+	public async disableExpired(): Promise<{
+		disabledCount: number;
+		ids: string[];
+	}> {
+		const expired = await container.prisma.experiment.findMany({
+			where: { enabled: true, endDate: { lt: new Date() } },
+			select: { id: true },
+		});
+
+		const ids: string[] = [];
+		for (const { id } of expired) {
+			try {
+				// oxlint-disable-next-line no-await-in-loop
+				await this.update(id, { enabled: false });
+				ids.push(id);
+			} catch (error) {
+				container.logger.error(
+					`[experiments] failed to disable expired experiment ${id}`,
+					error,
+				);
+			}
+		}
+
+		return { disabledCount: ids.length, ids };
 	}
 
 	/// Permanently deletes an experiment (overrides cascade via the schema).
-	public delete(id: string): Promise<Experiment> {
-		return container.prisma.experiment.delete({ where: { id } });
+	public async delete(id: string): Promise<Experiment> {
+		const experiment = await container.prisma.experiment.delete({
+			where: { id },
+		});
+		await invalidateExperimentCache(id);
+		return experiment;
 	}
 
 	/// Fetches a single experiment by key, or `null` when absent.
@@ -76,10 +124,12 @@ export class ExperimentManager {
 	}
 
 	/// Creates or updates a manual override for a guild or user.
-	public setOverride(options: SetOverrideOptions): Promise<ExperimentOverride> {
+	public async setOverride(
+		options: SetOverrideOptions,
+	): Promise<ExperimentOverride> {
 		const { experimentId, entityType, entityId, bucket, reason, createdBy } =
 			options;
-		return container.prisma.experimentOverride.upsert({
+		const override = await container.prisma.experimentOverride.upsert({
 			where: {
 				experimentId_entityType_entityId: {
 					experimentId,
@@ -97,6 +147,8 @@ export class ExperimentManager {
 			},
 			update: { bucket, reason: reason ?? null, createdBy },
 		});
+		await invalidateExperimentCache(experimentId);
+		return override;
 	}
 
 	/// Removes any matching override, returning how many rows were deleted.
@@ -108,6 +160,7 @@ export class ExperimentManager {
 		const { count } = await container.prisma.experimentOverride.deleteMany({
 			where: { experimentId, entityType, entityId },
 		});
+		await invalidateExperimentCache(experimentId);
 		return count;
 	}
 
@@ -123,6 +176,36 @@ export class ExperimentManager {
 	): Promise<ResolveResult> {
 		const botId = options.botId ?? null;
 
+		// Step 0 — cache lookup. A hit short-circuits the database round-trips;
+		// a miss (including any Redis failure) falls through to live resolution.
+		const cached = await getCachedResolve(
+			experimentKey,
+			entityType,
+			entityId,
+			botId,
+		);
+		if (cached !== null) return cached;
+
+		const result = await this.#resolveUncached(
+			experimentKey,
+			entityType,
+			entityId,
+			botId,
+		);
+
+		// Cache every outcome (disabled/expired included); the short TTL plus
+		// explicit mutation cache-busting keep stale reads bounded.
+		await setCachedResolve(experimentKey, entityType, entityId, botId, result);
+		return result;
+	}
+
+	/// Performs the live database resolution without consulting the cache.
+	async #resolveUncached(
+		experimentKey: string,
+		entityType: ResolveEntityType,
+		entityId: string,
+		botId: string | null,
+	): Promise<ResolveResult> {
 		// Step 1 — find the experiment matching the key within the bot scope. The
 		// key is the primary key, so at most one row matches; the `botId` guard
 		// ensures a bot-scoped flag does not leak to other bots, while global

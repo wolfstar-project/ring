@@ -32,23 +32,23 @@ importers:
         specifier: ^3.18.2
         version: 3.18.2
       '@wolfstar/env-utilities':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@wolfstar/http-framework':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^2.2.2
+        version: 2.2.2
       '@wolfstar/http-framework-i18n':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^1.2.2
+        version: 1.2.2
       '@wolfstar/logger':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^2.0.5
+        version: 2.0.5
       '@wolfstar/shared-http-pieces':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^1.2.4
+        version: 1.2.4
       '@wolfstar/start-banner':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^2.0.3
+        version: 2.0.3
       discord-api-types:
         specifier: ^0.38.47
         version: 0.38.47
@@ -1357,33 +1357,33 @@ packages:
     resolution: {integrity: sha512-Xfe6rpCTxSxfbswi/W/Pz7zp1WWSNn4A0eW4mLkQUewCrXXtMj31lCg+iQyTkh/CkusZSq9eDflu7tjEDXUY6g==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
-  '@wolfstar/env-utilities@3.0.1':
-    resolution: {integrity: sha512-kUI0oNN62Snp1WvaIyeXGXZ2kQcjmurmKr6xYiu2E71ocJly73GacLdikoDRqn44bOJtUOyJnwtg3dBVkifQwQ==}
-    engines: {node: '>=18'}
+  '@wolfstar/env-utilities@2.0.2':
+    resolution: {integrity: sha512-4BzmJSKKDNv2r5SvVetU3sRcoODLPdOd/cF3H0/r5Hil1FVmzP6J3PufXAeWFaNE7cMcomy3kZ0LfDbzS2ld3g==}
+    engines: {node: '>=20'}
 
-  '@wolfstar/http-framework-i18n@3.0.1':
-    resolution: {integrity: sha512-wSxWgFvgKviKfnalSUduG6cSQ0F0i9GCHemxyp1AZepQsvtu5nHQfHj8F9y+SblQ/0K+xp8I/xVYczRmYWjSKA==}
-    engines: {node: '>=18'}
+  '@wolfstar/http-framework-i18n@1.2.2':
+    resolution: {integrity: sha512-KJL4Dp4ckYzGVmPPaomvFIGdFg+SoecXY6xUQURKpxiTDy+y2m+xx0Y/DtgMe5D49eSyC3e+IFSFEmzhNZ4o4Q==}
+    engines: {node: '>=20'}
 
-  '@wolfstar/http-framework@3.0.1':
-    resolution: {integrity: sha512-0kumXat6pWt8bsZK/RB5srRK+YuZAZBxRDs9wOQYexq1gmQWmIKY6izsR1bmidY7TvTVS732USNGlynsR4sXpw==}
-    engines: {node: '>=18'}
+  '@wolfstar/http-framework@2.2.2':
+    resolution: {integrity: sha512-lbFD5Xh5bqSmHBK/CgIZPur3OuZ98ahF/Y+K7zvBJc3P0lH1FE7aC7IjTJLZMe9bi3fVvcmj2IVIPgMZdOBn8g==}
+    engines: {node: '>=20'}
 
-  '@wolfstar/i18next-backend@3.0.1':
-    resolution: {integrity: sha512-z5AHBJj7p6lLYth/bMRqzfuQEY9BXVKW/HMC8mcnrvRKmDmbXgXIrg9u+WiZyQEjXn7OoYTMA5HYiJRe68zgnQ==}
-    engines: {node: '>=18'}
+  '@wolfstar/i18next-backend@2.0.7':
+    resolution: {integrity: sha512-92eVD0X/GHm2PQrkLHVwc/K+gbRl2IKpPR3Sp6UHgauCnRxTKWs+AHBq2mLwu20Tyf7asixu/gUQpdimpZI1/Q==}
+    engines: {node: '>=20'}
 
-  '@wolfstar/logger@3.0.1':
-    resolution: {integrity: sha512-IWS/Tb6tyFvrl0dv+T86Jjw6RdNdNPBloWhOQmXV4tasHqPpxfPVaUWYgZka1kTmLxPGEb6GlqY/JAWa/XMHYg==}
-    engines: {node: '>=18'}
+  '@wolfstar/logger@2.0.5':
+    resolution: {integrity: sha512-+888D7cUwhzLtxsJCbZEhpuluu7wVYLf2b06g+lBlwBXOTPlWZy5YZ/gO/lfjCaq1J6vlMCKZLh4/YMxyZfPZQ==}
+    engines: {node: '>=20'}
 
-  '@wolfstar/shared-http-pieces@3.0.1':
-    resolution: {integrity: sha512-shwMvnmBt1WnfLAPC2ZbOr5zeITap4SPWOsN8KbxFOu1w1QIsgPIOd/0gYVLi5IoafFovUwZuB59CQxE+t5OsQ==}
-    engines: {node: '>=16.9.0', npm: '>=8.0.0'}
+  '@wolfstar/shared-http-pieces@1.2.4':
+    resolution: {integrity: sha512-SqckUaKeZ+xYijgDKG5u/kruF49apWAkcWS2lGxBxKYRtEj8ooY7qD2REdyfrw7g0AVaQ8wgCn06oCLeRLcTzg==}
+    engines: {node: '>=20'}
 
-  '@wolfstar/start-banner@3.0.1':
-    resolution: {integrity: sha512-Q1mRxbRMrHoVn6EOuxT4AzoR9fmknt7XkgqeF7yGVvcBxwaQmm5J6e63f+++JMbjsttfXcrRLqRVWHQ+WhvDLQ==}
-    engines: {node: '>=18'}
+  '@wolfstar/start-banner@2.0.3':
+    resolution: {integrity: sha512-nKicXLuY/YWKoCWtTDZKN5VSpOeuQOqDSRfSb+YxRowoQGxy2pBrRTDESbiocSoRnm/vr0q2Dp11Q1ccC378Xw==}
+    engines: {node: '>=20'}
 
   abstract-logging@2.0.1:
     resolution: {integrity: sha512-2BjRTZxTPvheOvGbBslFSYOUkr+SjPtOnrLP33f+VIWLzezQpZcqVg7ja3L4dBXmzzgwT+a029jRx5PCi3JuiA==}
@@ -1705,12 +1705,8 @@ packages:
     resolution: {integrity: sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==}
     engines: {node: '>=8'}
 
-  dotenv-expand@12.0.3:
-    resolution: {integrity: sha512-uc47g4b+4k/M/SeaW1y4OApx+mtLWl92l5LMPP0GNXctZqELk+YGgOPIIC5elYmUH4OuoK3JLhuRUYegeySiFA==}
-    engines: {node: '>=12'}
-
-  dotenv@16.6.1:
-    resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
+  dotenv-expand@13.0.0:
+    resolution: {integrity: sha512-aBfBS8eYIeXmpHI9ThIlA7/WLq+SLt18iXUZhb52rW89QLKQFoIpPG1bPeewoPZsTyjSSO3T7234FBVUM1V2rA==}
     engines: {node: '>=12'}
 
   dotenv@17.4.2:
@@ -1957,6 +1953,7 @@ packages:
   git-raw-commits@5.0.1:
     resolution: {integrity: sha512-Y+csSm2GD/PCSh6Isd/WiMjNAydu0VBiG9J7EdQsNA5P9uXvLayqjmTsNlK5Gs9IhblFZqOU0yid5Il5JPoLiQ==}
     engines: {node: '>=18'}
+    deprecated: Deprecated and no longer maintained. Use @conventional-changelog/git-client instead.
     hasBin: true
 
   glob-parent@6.0.2:
@@ -4177,21 +4174,21 @@ snapshots:
 
   '@vladfrangu/async_event_emitter@2.4.7': {}
 
-  '@wolfstar/env-utilities@3.0.1':
+  '@wolfstar/env-utilities@2.0.2':
     dependencies:
       dotenv: 17.4.2
-      dotenv-expand: 12.0.3
+      dotenv-expand: 13.0.0
 
-  '@wolfstar/http-framework-i18n@3.0.1':
+  '@wolfstar/http-framework-i18n@1.2.2':
     dependencies:
       '@discordjs/collection': 2.1.1
       '@sapphire/utilities': 3.18.2
-      '@wolfstar/i18next-backend': 3.0.1
+      '@wolfstar/i18next-backend': 2.0.7
       discord-api-types: 0.38.47
       i18next: 22.5.1
       tslib: 2.8.1
 
-  '@wolfstar/http-framework@3.0.1':
+  '@wolfstar/http-framework@2.2.2':
     dependencies:
       '@discordjs/builders': 1.14.1
       '@discordjs/collection': 2.1.1
@@ -4203,28 +4200,28 @@ snapshots:
       '@vladfrangu/async_event_emitter': 2.4.7
       discord-api-types: 0.38.47
 
-  '@wolfstar/i18next-backend@3.0.1':
+  '@wolfstar/i18next-backend@2.0.7':
     dependencies:
       tslib: 2.8.1
 
-  '@wolfstar/logger@3.0.1':
+  '@wolfstar/logger@2.0.5':
     dependencies:
       colorette: 2.0.20
 
-  '@wolfstar/shared-http-pieces@3.0.1':
+  '@wolfstar/shared-http-pieces@1.2.4':
     dependencies:
       '@discordjs/builders': 1.14.1
       '@discordjs/collection': 2.1.1
       '@sentry/node': 8.55.2
-      '@wolfstar/env-utilities': 3.0.1
-      '@wolfstar/http-framework': 3.0.1
-      '@wolfstar/http-framework-i18n': 3.0.1
+      '@wolfstar/env-utilities': 2.0.2
+      '@wolfstar/http-framework': 2.2.2
+      '@wolfstar/http-framework-i18n': 1.2.2
       discord-api-types: 0.38.47
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@wolfstar/start-banner@3.0.1': {}
+  '@wolfstar/start-banner@2.0.3': {}
 
   abstract-logging@2.0.1: {}
 
@@ -4529,11 +4526,9 @@ snapshots:
     dependencies:
       is-obj: 2.0.0
 
-  dotenv-expand@12.0.3:
+  dotenv-expand@13.0.0:
     dependencies:
-      dotenv: 16.6.1
-
-  dotenv@16.6.1: {}
+      dotenv: 17.4.2
 
   dotenv@17.4.2: {}
 

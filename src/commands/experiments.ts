@@ -21,6 +21,8 @@ const Categories = [
 	"custom",
 ] as const;
 
+const ExperimentsPerPage = 10;
+
 @RegisterCommand((builder) =>
 	builder
 		.setName("experiments")
@@ -105,7 +107,9 @@ export class UserCommand extends Command {
 					.setName("enabled")
 					.setDescription("Toggle the experiment on or off"),
 			)
-			.addStringOption(getDateOption("end-date", "Update the expiry date")),
+			.addStringOption(
+				getDateOption("end-date", "Update the expiry date", true),
+			),
 	)
 	public async edit(
 		interaction: Command.ChatInputInteraction,
@@ -113,7 +117,7 @@ export class UserCommand extends Command {
 	) {
 		if (!this.isOwner(interaction)) return this.denied(interaction);
 
-		const endDate = parseDate(options["end-date"]);
+		const endDate = parseEditableDate(options["end-date"]);
 		if (endDate === Invalid) {
 			return this.reply(interaction, "The provided end date is invalid.");
 		}
@@ -273,6 +277,29 @@ export class UserCommand extends Command {
 			);
 		}
 
+		// Reject overrides whose entity type does not match the experiment's
+		// scope: the resolver's scope guard would never look them up, so they
+		// would silently never apply. `BOTH` accepts either entity type.
+		const experiment = await this.container.prisma.experiment.findUnique({
+			where: { id: options.experiment },
+			select: { entityType: true },
+		});
+		if (isNullish(experiment)) {
+			return this.reply(
+				interaction,
+				`\`${options.experiment}\` does not exist.`,
+			);
+		}
+		if (
+			experiment.entityType !== "BOTH" &&
+			experiment.entityType !== entityType
+		) {
+			return this.reply(
+				interaction,
+				`This experiment targets ${experiment.entityType.toLowerCase()} entities; a ${options["entity-type"]} override would never apply.`,
+			);
+		}
+
 		try {
 			await this.container.prisma.experimentOverride.upsert({
 				where,
@@ -320,7 +347,13 @@ export class UserCommand extends Command {
 						{ name: "All", value: "all" },
 					),
 			)
-			.addStringOption(getBotIdOption()),
+			.addStringOption(getBotIdOption())
+			.addIntegerOption((option) =>
+				option
+					.setName("page")
+					.setDescription("Page number (10 results per page)")
+					.setMinValue(1),
+			),
 	)
 	public async list(
 		interaction: Command.ChatInputInteraction,
@@ -348,23 +381,37 @@ export class UserCommand extends Command {
 				break;
 		}
 
-		const experiments = await this.container.prisma.experiment.findMany({
-			where,
-			orderBy: { createdAt: "desc" },
-			take: 10,
-		});
+		const page = Math.max(1, options.page ?? 1);
+		const [total, experiments] = await Promise.all([
+			this.container.prisma.experiment.count({ where }),
+			this.container.prisma.experiment.findMany({
+				where,
+				orderBy: { createdAt: "desc" },
+				skip: (page - 1) * ExperimentsPerPage,
+				take: ExperimentsPerPage,
+			}),
+		]);
+
+		const totalPages = Math.max(1, Math.ceil(total / ExperimentsPerPage));
 
 		if (experiments.length === 0) {
-			return this.reply(interaction, "No experiments matched those filters.");
+			if (total === 0) {
+				return this.reply(interaction, "No experiments matched those filters.");
+			}
+			return this.reply(
+				interaction,
+				`No experiments on page ${page} of ${totalPages}.`,
+			);
 		}
 
 		const lines = experiments.map((experiment) => {
 			const scope = experiment.botId ?? "global";
 			const state = experiment.enabled ? "on" : "off";
-			const rollout = (experiment.rollout / 100).toFixed(0);
-			return `${experiment.id} [${state}, ${rollout}%, ${scope}]`;
+			const rollout = formatRolloutPercent(experiment.rollout);
+			return `${experiment.id} [${state}, ${rollout}, ${scope}]`;
 		});
-		return this.reply(interaction, codeBlock(lines.join("\n")));
+		const header = `Page ${page}/${totalPages} (${total} experiment${total === 1 ? "" : "s"})`;
+		return this.reply(interaction, codeBlock([header, ...lines].join("\n")));
 	}
 
 	@RegisterSubcommand((builder) =>
@@ -395,7 +442,7 @@ export class UserCommand extends Command {
 			`Name        : ${experiment.name}`,
 			`Category    : ${experiment.category}`,
 			`Entity type : ${experiment.entityType}`,
-			`Rollout     : ${(experiment.rollout / 100).toFixed(0)}% (${experiment.rollout}/10000)`,
+			`Rollout     : ${formatRolloutPercent(experiment.rollout)} (${experiment.rollout}/10000)`,
 			`Enabled     : ${experiment.enabled ? "yes" : "no"}`,
 			`Bot scope   : ${experiment.botId ?? "global"}`,
 			`Starts      : ${experiment.startDate?.toISOString() ?? "—"}`,
@@ -461,6 +508,7 @@ interface ListOptions {
 	category?: string;
 	status?: "active" | "disabled" | "expired" | "all";
 	"bot-id"?: string;
+	page?: number;
 }
 
 interface InfoOptions {
@@ -477,6 +525,17 @@ function parseDate(input?: string): Date | typeof Invalid | undefined {
 	return Number.isNaN(date.getTime()) ? Invalid : date;
 }
 
+/// Like `parseDate`, but also accepts the sentinels `none`/`clear`, returning
+/// `null` so `edit` can remove a previously set date. Absent input still
+/// returns `undefined`, which Prisma leaves unchanged.
+function parseEditableDate(
+	input?: string,
+): Date | null | typeof Invalid | undefined {
+	const normalized = input?.trim().toLowerCase();
+	if (normalized === "none" || normalized === "clear") return null;
+	return parseDate(input);
+}
+
 function normalizeOptional(value?: string): string | undefined {
 	return isNullishOrEmpty(value) ? undefined : value;
 }
@@ -490,6 +549,12 @@ function toEntityType(value: string): "GUILD" | "USER" | "BOTH" {
 function toRollout(percent?: number): number {
 	if (isNullish(percent)) return 0;
 	return Math.max(0, Math.min(100, percent)) * 100;
+}
+
+/// Formats a 0-10000 rollout as an exact percentage (e.g. `0.5%`, `50%`),
+/// avoiding the precision loss of rounding to whole percents.
+function formatRolloutPercent(rollout: number): string {
+	return `${rollout / 100}%`;
 }
 
 function toBucketValue(value?: string): ExperimentBucket | null {
@@ -561,11 +626,15 @@ function getRolloutOption() {
 			.setMaxValue(100);
 }
 
-function getDateOption(name: string, description: string) {
+function getDateOption(name: string, description: string, clearable = false) {
 	return () =>
 		new SlashCommandStringOption()
 			.setName(name)
-			.setDescription(`${description} (ISO 8601)`);
+			.setDescription(
+				clearable
+					? `${description} (ISO 8601, or "none" to clear)`
+					: `${description} (ISO 8601)`,
+			);
 }
 
 function getBotIdOption() {

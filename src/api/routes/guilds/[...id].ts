@@ -38,8 +38,7 @@ container.server.route({
 				.send({ success: false, message: "Invalid Guild ID" });
 		}
 
-		const data = await container.prisma.guild.findFirst({
-			where: { id },
+		const data = await container.guilds.findById(id, {
 			select: mappings.properties,
 		});
 		return reply.code(200).send(data ?? mappings.defaults);

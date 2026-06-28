@@ -50,9 +50,7 @@ export class UserCommand extends Command {
 		}
 
 		const id = BigInt(options.guild);
-		const data = await this.container.prisma.guild.findFirst({
-			where: { id },
-		});
+		const data = await this.container.guilds.findById(id);
 		const limits = data ?? { id, ...getAllDefaults() };
 
 		const lines = [
@@ -107,11 +105,7 @@ export class UserCommand extends Command {
 			]),
 		);
 		try {
-			await this.container.prisma.guild.upsert({
-				where: { id },
-				create: { id, ...data },
-				update: data,
-			});
+			await this.container.guilds.upsert(id, data);
 			return interaction.reply({
 				content: "Updated.",
 				flags: MessageFlags.Ephemeral,
@@ -144,9 +138,7 @@ export class UserCommand extends Command {
 			});
 		}
 
-		const data = await this.container.prisma.guild.delete({
-			where: { id: BigInt(options.guild) },
-		});
+		const data = await this.container.guilds.delete(BigInt(options.guild));
 		const content = isNullish(data)
 			? "There is no data recorded for that guild."
 			: "Successfully deleted the specified guild's data.";

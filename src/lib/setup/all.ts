@@ -8,6 +8,7 @@ import {
 /* oxlint-disable import/first */
 import "#lib/setup/logger";
 import "#lib/setup/prisma";
+import "#lib/setup/guilds";
 import "#lib/setup/experiments";
 import "#lib/setup/experimentsExpiry";
 import "#lib/setup/fastify";

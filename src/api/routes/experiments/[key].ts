@@ -5,6 +5,7 @@ import {
 	normalizeOptional,
 	parseEditableDate,
 	readStringField,
+	serializeExperiment,
 	toRollout,
 } from "#lib/experiments";
 import { container } from "@sapphire/pieces";
@@ -53,7 +54,9 @@ container.server.route({
 		}
 
 		const overrideCount = await container.experiments.countOverrides(key);
-		return reply.code(200).send({ ...experiment, overrideCount });
+		return reply
+			.code(200)
+			.send({ ...serializeExperiment(experiment), overrideCount });
 	},
 });
 
@@ -126,7 +129,7 @@ container.server.route({
 
 		try {
 			const experiment = await container.experiments.update(key, data);
-			return reply.code(200).send(experiment);
+			return reply.code(200).send(serializeExperiment(experiment));
 		} catch (error) {
 			container.logger.error(error);
 			return reply

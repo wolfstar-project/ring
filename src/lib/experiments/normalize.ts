@@ -74,6 +74,21 @@ export function toRollout(percent?: number | null): number {
 	return Math.max(0, Math.min(100, percent)) * 100;
 }
 
+/// Converts the stored 0-10000 rollout scale back to a 0-100 percentage for
+/// API responses.
+export function fromRollout(stored?: number | null): number {
+	if (isNullish(stored)) return 0;
+	return stored / 100;
+}
+
+/// Serializes an experiment for API responses, exposing rollout as a 0-100
+/// percentage instead of the internal 0-10000 scale.
+export function serializeExperiment<T extends { rollout: number }>(
+	experiment: T,
+): T {
+	return { ...experiment, rollout: fromRollout(experiment.rollout) };
+}
+
 /// Resolves a bucket from either the string aliases used by the slash command
 /// (`eligible`/`not-eligible`/`override`) or their raw numeric values
 /// (`0`/`1`/`2`). Returns `null` for unrecognised input.

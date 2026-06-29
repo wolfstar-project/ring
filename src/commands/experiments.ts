@@ -57,18 +57,24 @@ export class UserCommand extends Command {
 		options: CreateOptions,
 	) {
 		if (!UserCommand.ClientOwners.includes(interaction.user.id))
-			return this.denied(interaction);
+			return interaction.reply({
+				content: "You cannot use this command.",
+				flags: MessageFlags.Ephemeral,
+			});
 
 		const startDate = parseDate(options["start-date"]);
 		const endDate = parseDate(options["end-date"]);
 		if (startDate === Invalid || endDate === Invalid) {
-			return this.reply(interaction, "One of the provided dates is invalid.");
+			return interaction.reply({
+				content: "One of the provided dates is invalid.",
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 		if (startDate && endDate && endDate < startDate) {
-			return this.reply(
-				interaction,
-				"The end date cannot be before the start date.",
-			);
+			return interaction.reply({
+				content: "The end date cannot be before the start date.",
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
 		const botId = normalizeOptional(options["bot-id"]);
@@ -93,13 +99,16 @@ export class UserCommand extends Command {
 			});
 		} catch (error) {
 			this.container.logger.error(error);
-			return this.reply(
-				interaction,
-				`I could not create the experiment. A flag with the key \`${id}\` may already exist.`,
-			);
+			return interaction.reply({
+				content: `I could not create the experiment. A flag with the key \`${id}\` may already exist.`,
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
-		return this.reply(interaction, `Created experiment \`${id}\`.`);
+		return interaction.reply({
+			content: `Created experiment \`${id}\`.`,
+			flags: MessageFlags.Ephemeral,
+		});
 	}
 
 	@RegisterSubcommand((builder) =>
@@ -124,11 +133,17 @@ export class UserCommand extends Command {
 		options: EditOptions,
 	) {
 		if (!UserCommand.ClientOwners.includes(interaction.user.id))
-			return this.denied(interaction);
+			return interaction.reply({
+				content: "You cannot use this command.",
+				flags: MessageFlags.Ephemeral,
+			});
 
 		const endDate = parseEditableDate(options["end-date"]);
 		if (endDate === Invalid) {
-			return this.reply(interaction, "The provided end date is invalid.");
+			return interaction.reply({
+				content: "The provided end date is invalid.",
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
 		// A concrete new end date must not fall before the stored start date,
@@ -138,16 +153,16 @@ export class UserCommand extends Command {
 				options.experiment,
 			);
 			if (isNullish(existing)) {
-				return this.reply(
-					interaction,
-					`I could not edit \`${options.experiment}\`; it may not exist.`,
-				);
+				return interaction.reply({
+					content: `I could not edit \`${options.experiment}\`; it may not exist.`,
+					flags: MessageFlags.Ephemeral,
+				});
 			}
 			if (existing.startDate && endDate < existing.startDate) {
-				return this.reply(
-					interaction,
-					"The end date cannot be before the experiment's start date.",
-				);
+				return interaction.reply({
+					content: "The end date cannot be before the experiment's start date.",
+					flags: MessageFlags.Ephemeral,
+				});
 			}
 		}
 
@@ -165,16 +180,16 @@ export class UserCommand extends Command {
 			await this.container.experiments.update(options.experiment, data);
 		} catch (error) {
 			this.container.logger.error(error);
-			return this.reply(
-				interaction,
-				`I could not edit \`${options.experiment}\`; it may not exist.`,
-			);
+			return interaction.reply({
+				content: `I could not edit \`${options.experiment}\`; it may not exist.`,
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
-		return this.reply(
-			interaction,
-			`Updated experiment \`${options.experiment}\`.`,
-		);
+		return interaction.reply({
+			content: `Updated experiment \`${options.experiment}\`.`,
+			flags: MessageFlags.Ephemeral,
+		});
 	}
 
 	@RegisterSubcommand((builder) =>
@@ -194,29 +209,33 @@ export class UserCommand extends Command {
 		options: DeleteOptions,
 	) {
 		if (!UserCommand.ClientOwners.includes(interaction.user.id))
-			return this.denied(interaction);
+			return interaction.reply({
+				content: "You cannot use this command.",
+				flags: MessageFlags.Ephemeral,
+			});
 
 		if (options.confirm !== options.experiment) {
-			return this.reply(
-				interaction,
-				"The confirmation does not match the experiment key. Deletion aborted.",
-			);
+			return interaction.reply({
+				content:
+					"The confirmation does not match the experiment key. Deletion aborted.",
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
 		try {
 			await this.container.experiments.delete(options.experiment);
 		} catch (error) {
 			this.container.logger.error(error);
-			return this.reply(
-				interaction,
-				`I could not delete \`${options.experiment}\`; it may not exist.`,
-			);
+			return interaction.reply({
+				content: `I could not delete \`${options.experiment}\`; it may not exist.`,
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
-		return this.reply(
-			interaction,
-			`Deleted experiment \`${options.experiment}\`.`,
-		);
+		return interaction.reply({
+			content: `Deleted experiment \`${options.experiment}\`.`,
+			flags: MessageFlags.Ephemeral,
+		});
 	}
 
 	@RegisterSubcommand((builder) =>
@@ -271,7 +290,10 @@ export class UserCommand extends Command {
 		options: OverrideOptions,
 	) {
 		if (!UserCommand.ClientOwners.includes(interaction.user.id))
-			return this.denied(interaction);
+			return interaction.reply({
+				content: "You cannot use this command.",
+				flags: MessageFlags.Ephemeral,
+			});
 
 		const entityType = options["entity-type"] === "guild" ? "GUILD" : "USER";
 		const entityId = options["entity-id"];
@@ -286,15 +308,18 @@ export class UserCommand extends Command {
 				count === 0
 					? "There was no override to remove."
 					: `Removed the override for \`${entityId}\`.`;
-			return this.reply(interaction, content);
+			return interaction.reply({
+				content: content,
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
 		const bucket = toBucketValue(options.bucket);
 		if (bucket === null) {
-			return this.reply(
-				interaction,
-				"A bucket is required when setting an override.",
-			);
+			return interaction.reply({
+				content: "A bucket is required when setting an override.",
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
 		// Reject overrides whose entity type does not match the experiment's
@@ -304,19 +329,19 @@ export class UserCommand extends Command {
 			options.experiment,
 		);
 		if (isNullish(experiment)) {
-			return this.reply(
-				interaction,
-				`\`${options.experiment}\` does not exist.`,
-			);
+			return interaction.reply({
+				content: `\`${options.experiment}\` does not exist.`,
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 		if (
 			experiment.entityType !== "BOTH" &&
 			experiment.entityType !== entityType
 		) {
-			return this.reply(
-				interaction,
-				`This experiment targets ${experiment.entityType.toLowerCase()} entities; a ${options["entity-type"]} override would never apply.`,
-			);
+			return interaction.reply({
+				content: `This experiment targets ${experiment.entityType.toLowerCase()} entities; a ${options["entity-type"]} override would never apply.`,
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
 		try {
@@ -330,16 +355,16 @@ export class UserCommand extends Command {
 			});
 		} catch (error) {
 			this.container.logger.error(error);
-			return this.reply(
-				interaction,
-				`I could not set the override; \`${options.experiment}\` may not exist.`,
-			);
+			return interaction.reply({
+				content: `I could not set the override; \`${options.experiment}\` may not exist.`,
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
-		return this.reply(
-			interaction,
-			`Set override for \`${entityId}\` on \`${options.experiment}\`.`,
-		);
+		return interaction.reply({
+			content: `Set override for \`${entityId}\` on \`${options.experiment}\`.`,
+			flags: MessageFlags.Ephemeral,
+		});
 	}
 
 	@RegisterSubcommand((builder) =>
@@ -371,7 +396,10 @@ export class UserCommand extends Command {
 		options: ListOptions,
 	) {
 		if (!UserCommand.ClientOwners.includes(interaction.user.id))
-			return this.denied(interaction);
+			return interaction.reply({
+				content: "You cannot use this command.",
+				flags: MessageFlags.Ephemeral,
+			});
 
 		const now = new Date();
 		const where: Prisma.ExperimentWhereInput = {};
@@ -410,12 +438,15 @@ export class UserCommand extends Command {
 
 		if (experiments.length === 0) {
 			if (total === 0) {
-				return this.reply(interaction, "No experiments matched those filters.");
+				return interaction.reply({
+					content: "No experiments matched those filters.",
+					flags: MessageFlags.Ephemeral,
+				});
 			}
-			return this.reply(
-				interaction,
-				`No experiments on page ${page} of ${totalPages}.`,
-			);
+			return interaction.reply({
+				content: `No experiments on page ${page} of ${totalPages}.`,
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
 		const lines = experiments.map((experiment) => {
@@ -425,7 +456,10 @@ export class UserCommand extends Command {
 			return `${experiment.id} [${state}, ${rollout}, ${scope}]`;
 		});
 		const header = `Page ${page}/${totalPages} (${total} experiment${total === 1 ? "" : "s"})`;
-		return this.reply(interaction, codeBlock([header, ...lines].join("\n")));
+		return interaction.reply({
+			content: codeBlock([header, ...lines].join("\n")),
+			flags: MessageFlags.Ephemeral,
+		});
 	}
 
 	@RegisterSubcommand((builder) =>
@@ -439,13 +473,19 @@ export class UserCommand extends Command {
 		options: InfoOptions,
 	) {
 		if (!UserCommand.ClientOwners.includes(interaction.user.id))
-			return this.denied(interaction);
+			return interaction.reply({
+				content: "You cannot use this command.",
+				flags: MessageFlags.Ephemeral,
+			});
 
 		const experiment = await this.container.experiments.findById(
 			options.experiment,
 		);
 		if (isNullish(experiment)) {
-			return this.reply(interaction, "That experiment does not exist.");
+			return interaction.reply({
+				content: "That experiment does not exist.",
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 
 		const overrideCount = await this.container.experiments.countOverrides(
@@ -467,15 +507,10 @@ export class UserCommand extends Command {
 		if (!isNullishOrEmpty(experiment.description)) {
 			lines.push(`Description : ${experiment.description}`);
 		}
-		return this.reply(interaction, codeBlock(lines.join("\n")));
-	}
-
-	private denied(interaction: Command.ChatInputInteraction) {
-		return this.reply(interaction, "You cannot use this command.");
-	}
-
-	private reply(interaction: Command.ChatInputInteraction, content: string) {
-		return interaction.reply({ content, flags: MessageFlags.Ephemeral });
+		return interaction.reply({
+			content: codeBlock(lines.join("\n")),
+			flags: MessageFlags.Ephemeral,
+		});
 	}
 
 	private static readonly ClientOwners = envParseArray("CLIENT_OWNERS");

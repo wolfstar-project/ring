@@ -44,3 +44,72 @@ model Guild {
 
   @@map("guild")
 }
+
+// ─── Experiments (Feature Flags) ──────────────────────────────────────────────
+
+/// Whether an experiment or override targets guilds, users, or both.
+enum ExperimentEntityType {
+  GUILD
+  USER
+  BOTH
+
+  @@map("experiment_entity_type")
+}
+
+/// A feature flag / experiment definition. The `id` is immutable and generated
+/// at creation time as `{YYYYMMDD}-{category}-{slug}` (or with `{botId}` when
+/// scoped to a single bot).
+model Experiment {
+  /// Unique key, e.g. "20240115-moderation-auto-ban-v1".
+  id          String               @id
+  /// Human-readable display name.
+  name        String
+  description String?
+  /// Feature category, e.g. "moderation" | "leveling" | "welcome".
+  category    String
+  /// Whether this flag targets guilds, users, or both.
+  entityType  ExperimentEntityType @default(GUILD) @map("entity_type")
+  /// Whether the experiment is currently active.
+  enabled     Boolean              @default(false)
+  /// Rollout on a 0–10000 scale (mirrors Discord's internal scale). 5000 = 50%,
+  /// 10000 = 100%, 0 = disabled (no hash assignment).
+  rollout     Int                  @default(0) @db.SmallInt
+  /// Optional scheduling window.
+  startDate   DateTime?            @map("start_date")
+  endDate     DateTime?            @map("end_date")
+  /// Author of this experiment (Discord user ID).
+  createdBy   String               @map("created_by")
+  /// Bot scope: null = global (all bots), "wolfstar" = only WolfStar, etc.
+  botId       String?              @map("bot_id")
+  createdAt   DateTime             @default(now()) @map("created_at")
+  updatedAt   DateTime             @updatedAt @map("updated_at")
+
+  overrides ExperimentOverride[]
+
+  @@index([category])
+  @@index([enabled])
+  @@index([botId])
+  @@map("experiment")
+}
+
+/// Manual override for a specific guild or user. Overrides always take
+/// precedence over hash-based assignment.
+model ExperimentOverride {
+  id           String               @id @default(cuid())
+  experimentId String               @map("experiment_id")
+  experiment   Experiment           @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  /// Whether this override targets a guild or a user.
+  entityType   ExperimentEntityType @map("entity_type")
+  /// Discord guild ID or user ID.
+  entityId     String               @map("entity_id")
+  /// 0 = Eligible, 1 = Not Eligible, 2 = Force-Override (always on).
+  bucket       Int                  @db.SmallInt
+  /// Optional reason for the audit trail.
+  reason       String?
+  createdBy    String               @map("created_by")
+  createdAt    DateTime             @default(now()) @map("created_at")
+
+  @@unique([experimentId, entityType, entityId])
+  @@index([entityId])
+  @@map("experiment_override")
+}

@@ -1,3 +1,4 @@
+import { run as redisRun } from "#lib/setup/redis";
 import { envParseString, setup as envRun } from "@wolfstar/env-utilities";
 import {
 	initializeSentry,
@@ -7,6 +8,8 @@ import {
 /* oxlint-disable import/first */
 import "#lib/setup/logger";
 import "#lib/setup/prisma";
+import "#lib/setup/experiments";
+import "#lib/setup/experimentsExpiry";
 import "#lib/setup/fastify";
 import "@wolfstar/shared-http-pieces/register";
 
@@ -16,6 +19,8 @@ export async function setup() {
 	setRepository("ring");
 	setInvite(envParseString("DISCORD_CLIENT_ID"), "0");
 	initializeSentry();
+
+	redisRun();
 
 	// Load all routes
 	await import("#api/routes/_load");

@@ -12,6 +12,27 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=ring
 
+  redis:
+    container_name: redis
+    image: "redis:7-alpine"
+    command: ["redis-server", "--port", "8287", "--requirepass", "redis"]
+    ports:
+      - "8287:8287"
+    restart: always
+    volumes:
+      - "redis-data:/data"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "8287", "-a", "redis", "ping"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+    environment:
+      - REDIS_PASSWORD=redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=8287
+      - REDIS_DB=0
+
   ring:
     build:
       context: ../

@@ -24,6 +24,12 @@ const Categories = [
 	"custom",
 ] as const;
 
+const BotChoices = [
+	{ name: "WolfStar", value: "854714837388755004" },
+	{ name: "WolfStar (Beta)", value: "1288560050184650802" },
+	{ name: "Staryl", value: "1489991104672567386" },
+] as const;
+
 const ExperimentsPerPage = 10;
 
 @RegisterCommand((builder) =>
@@ -688,7 +694,7 @@ function getBotIdOption() {
 		new SlashCommandStringOption()
 			.setName("bot-id")
 			.setDescription("Scope to a specific bot; leave empty for global")
-			.setMaxLength(32);
+			.addChoices(...BotChoices);
 }
 
 function getExperimentOption() {

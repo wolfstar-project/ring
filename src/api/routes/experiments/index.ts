@@ -6,6 +6,7 @@ import {
 	normalizeOptional,
 	parseDate,
 	readStringField,
+	serializeExperiment,
 	toEntityType,
 	toRollout,
 } from "#lib/experiments";
@@ -77,7 +78,12 @@ container.server.route({
 		]);
 
 		const totalPages = Math.max(1, Math.ceil(total / ExperimentsPerPage));
-		return reply.code(200).send({ page, totalPages, total, experiments });
+		return reply.code(200).send({
+			page,
+			totalPages,
+			total,
+			experiments: experiments.map(serializeExperiment),
+		});
 	},
 });
 
@@ -177,7 +183,7 @@ container.server.route({
 				createdBy,
 				botId,
 			});
-			return reply.code(201).send(experiment);
+			return reply.code(201).send(serializeExperiment(experiment));
 		} catch (error) {
 			container.logger.error(error);
 			return reply.code(409).send({

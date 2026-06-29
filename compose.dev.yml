@@ -21,13 +21,14 @@ services:
   redis:
     container_name: ring-redis
     image: "redis:7-alpine"
+    command: ["redis-server", "--port", "8287", "--requirepass", "redis"]
     ports:
-      - "6379:6379"
+      - "8287:8287"
     restart: "no"
     volumes:
       - "ring-redis-data:/data"
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-p", "8287", "-a", "redis", "ping"]
       interval: 30s
       timeout: 60s
       retries: 5

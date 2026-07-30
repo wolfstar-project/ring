@@ -1,5 +1,5 @@
 import type { ApiRequest, ApiResponse } from "@wolfstar/plugin-api";
-import { requireMapping } from "#lib/api/auth";
+import { Authenticated } from "#lib/api/decorators";
 import {
 	InvalidDate,
 	buildExperimentKey,
@@ -15,15 +15,13 @@ import { isNullish, isNullishOrEmpty } from "@sapphire/utilities";
 import { HttpCodes } from "@wolfstar/http-framework";
 import { Route } from "@wolfstar/plugin-api";
 
+@Authenticated()
 export class ExperimentsCreateRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
 		super(context, { name: "experiments-create-post" });
 	}
 
 	public async run(request: ApiRequest, response: ApiResponse) {
-		const mappings = requireMapping(request, response);
-		if (mappings === null) return;
-
 		let body: Record<string, unknown>;
 		try {
 			body = await request.readBodyJson<Record<string, unknown>>();

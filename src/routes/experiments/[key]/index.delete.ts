@@ -1,18 +1,16 @@
 import type { ApiRequest, ApiResponse } from "@wolfstar/plugin-api";
-import { requireMapping } from "#lib/api/auth";
+import { Authenticated } from "#lib/api/decorators";
 import { container } from "@sapphire/pieces";
 import { HttpCodes } from "@wolfstar/http-framework";
 import { Route } from "@wolfstar/plugin-api";
 
+@Authenticated()
 export class ExperimentDeleteRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
 		super(context, { name: "experiments-delete" });
 	}
 
 	public async run(request: ApiRequest, response: ApiResponse) {
-		const mappings = requireMapping(request, response);
-		if (mappings === null) return;
-
 		const key = request.params.key;
 
 		if (request.query.get("confirm") !== key) {

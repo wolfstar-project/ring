@@ -1,6 +1,6 @@
 import type { Prisma } from "#generated/prisma";
 import type { ApiRequest, ApiResponse } from "@wolfstar/plugin-api";
-import { requireMapping } from "#lib/api/auth";
+import { Authenticated } from "#lib/api/decorators";
 import { serializeExperiment } from "#lib/experiments";
 import { container } from "@sapphire/pieces";
 import { isNullishOrEmpty } from "@sapphire/utilities";
@@ -9,15 +9,13 @@ import { Route } from "@wolfstar/plugin-api";
 
 const ExperimentsPerPage = 10;
 
+@Authenticated()
 export class ExperimentsListRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
 		super(context, { name: "experiments-list-get" });
 	}
 
 	public async run(request: ApiRequest, response: ApiResponse) {
-		const mappings = requireMapping(request, response);
-		if (mappings === null) return;
-
 		const category = request.query.get("category");
 		const botId = request.query.get("bot-id");
 		const status = request.query.get("status") ?? "all";

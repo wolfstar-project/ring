@@ -1,5 +1,5 @@
 import type { ApiRequest, ApiResponse } from "@wolfstar/plugin-api";
-import { requireMapping } from "#lib/api/auth";
+import { Authenticated } from "#lib/api/decorators";
 import {
 	normalizeOptional,
 	readStringField,
@@ -11,15 +11,13 @@ import { isNullish, isNullishOrEmpty } from "@sapphire/utilities";
 import { HttpCodes } from "@wolfstar/http-framework";
 import { Route } from "@wolfstar/plugin-api";
 
+@Authenticated()
 export class ExperimentOverrideCreateRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
 		super(context, { name: "experiments-overrides-create-post" });
 	}
 
 	public async run(request: ApiRequest, response: ApiResponse) {
-		const mappings = requireMapping(request, response);
-		if (mappings === null) return;
-
 		const key = request.params.key;
 
 		let body: Record<string, unknown>;

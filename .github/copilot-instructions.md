@@ -62,7 +62,10 @@
   WolfStar), authenticated via bearer tokens. Routes are `Route` pieces
   auto-loaded from `src/routes/`, with the path/method inferred from file
   location (folder segments, `[param]` dynamic segments, and a `.<method>`
-  filename suffix)
+  filename suffix). Authentication is enforced centrally by the `auth`
+  `Middleware` piece (`src/middlewares/auth.ts`) for any route class decorated
+  with `@Authenticated()` (`#lib/api/decorators`) — see "API Route Structure"
+  below
 - **Guild limits**: Canonical defaults, ranges, and bot mappings live in
   `src/lib/common/limits.ts` (`LimitDefinitions`, `Mappings`, `getMappings`)
 - **Database**: PostgreSQL with Prisma ORM. Models use `@@map()` for snake_case
@@ -79,6 +82,9 @@
 - `src/main.ts` - Application entry point
 - `src/routes/` - Internal REST API endpoints (guild config queries),
   auto-loaded as `@wolfstar/plugin-api` `Route` pieces
+- `src/middlewares/` - Global request middlewares (e.g. auth), auto-loaded as
+  `@wolfstar/plugin-api` `Middleware` pieces, run in ascending `position` order
+  before route dispatch
 - `src/commands/` - Discord slash commands using decorator pattern
 - `src/lib/setup/` - Application initialization (env, Prisma, logger)
 - `src/lib/common/` - Shared constants and guild limit definitions
@@ -117,23 +123,29 @@ and a `.<method>` filename suffix selects the HTTP method (e.g.
 `src/routes/guilds/[id].get.ts` registers `GET /guilds/[id]`):
 
 ```typescript
-import { requireMapping } from "#lib/api/auth";
+import { Authenticated } from "#lib/api/decorators";
 import { HttpCodes } from "@wolfstar/http-framework";
 import { Route, type ApiRequest, type ApiResponse } from "@wolfstar/plugin-api";
 
+@Authenticated()
 export class ExampleRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
 		super(context, { name: "example-get" });
 	}
 
 	public async run(request: ApiRequest, response: ApiResponse) {
-		const mappings = requireMapping(request, response);
-		if (mappings === null) return;
-
-		response.json({ success: true }, HttpCodes.OK);
+		// `request.mappings` is populated by the `auth` middleware because
+		// this route is decorated with `@Authenticated()`.
+		response.json({ success: true, mappings: request.mappings }, HttpCodes.OK);
 	}
 }
 ```
+
+`@Authenticated()` opts a route into the bearer-token check performed by the
+`auth` `Middleware` piece (`src/middlewares/auth.ts`, position `30`), which runs
+before any route's `run()` and writes 401/403 itself when the check fails —
+routes don't need to check auth manually. Omit the decorator for public routes
+(e.g. `src/routes/index.get.ts`).
 
 Two non-obvious gotchas:
 

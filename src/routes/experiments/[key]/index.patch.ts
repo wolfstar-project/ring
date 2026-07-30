@@ -35,9 +35,9 @@ export class ExperimentUpdateRoute extends Route {
 			);
 			return;
 		}
-		if (isNullish(body)) {
+		if (isNullish(body) || typeof body !== "object" || Array.isArray(body)) {
 			response.json(
-				{ success: false, message: "Missing request body" },
+				{ success: false, message: "The request body must be a JSON object" },
 				HttpCodes.BadRequest,
 			);
 			return;

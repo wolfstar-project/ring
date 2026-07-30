@@ -128,18 +128,18 @@ pnpm clean                # Remove build artifacts
 ```text
 src/
 ├── main.ts                     # Application entry point
-├── api/
-│   └── routes/                 # Internal REST API endpoints
-│       ├── _load.ts            # Route loader
-│       ├── index.ts            # Root route
-│       └── guilds/             # Guild configuration endpoints
-│           └── [...id].ts      # Guild lookup by ID
+├── routes/                     # Internal REST API endpoints, auto-loaded as
+│   │                           # @wolfstar/plugin-api Route pieces
+│   ├── index.get.ts            # Root route
+│   └── guilds/                 # Guild configuration endpoints
+│       └── [id].get.ts         # Guild lookup by ID
 ├── commands/                   # Discord slash commands (decorator pattern)
 ├── lib/
+│   ├── api/
+│   │   └── auth.ts             # Shared bearer-token auth helper for routes
 │   ├── augments.d.ts           # Environment variable type augmentations
-│   └── setup/                  # Application initialization (env, Fastify, Prisma, logger)
+│   └── setup/                  # Application initialization (env, Prisma, logger)
 │       ├── all.ts              # Setup orchestrator
-│       ├── fastify.ts          # Fastify server setup
 │       ├── logger.ts           # Logger setup
 │       └── prisma.ts           # Prisma client setup
 └── locales/                    # Translation JSON files organized by locale
@@ -168,30 +168,48 @@ formatting issues, run `pnpm format` before committing.
 - Use standard `enum` for values that cross module boundaries or are used in
   Prisma
 - Use `type` imports for type-only values: `import type { ... } from "..."`
-- Use path mapping aliases for internal imports: `#lib/*`, `#api/*`
+- Use path mapping aliases for internal imports: `#lib/*`, `#common/*`, `#types`
 - Group imports: type imports first, then internal aliases, then external
   packages
 
 ### API route patterns
 
-Routes are registered directly on `container.server` (Fastify). Always verify
-authorization headers and validate request parameters:
+Routes are `Route` pieces loaded from `src/routes/`; the path and method are
+inferred from the file's location (folder segments, `[param]` dynamic segments,
+and a `.<method>` filename suffix). Always verify authorization headers via
+`requireMapping` (`#lib/api/auth`) and validate request parameters:
 
 ```typescript
-container.server.route({
-	url: "/guilds/:id",
-	method: "GET",
-	handler: async (request, reply) => {
-		// Verify authorization, validate params, handle request
-	},
-});
+import { requireMapping } from "#lib/api/auth";
+import { HttpCodes } from "@wolfstar/http-framework";
+import { Route, type ApiRequest, type ApiResponse } from "@wolfstar/plugin-api";
+
+export class GuildRoute extends Route {
+	public constructor(context: Route.LoaderContext) {
+		// A unique name is required: @sapphire/pieces keys routes by filename
+		// alone, so two "index.get.ts" files in different directories would
+		// otherwise silently collide and only one would ever register.
+		super(context, { name: "guilds-detail-get" });
+	}
+
+	public async run(request: ApiRequest, response: ApiResponse) {
+		const mappings = requireMapping(request, response);
+		if (mappings === null) return;
+
+		// Validate params, handle request. Status codes must go through
+		// json()'s second argument -- response.status(x).json(y) silently
+		// resets the code back to 200 because json() defaults its own
+		// statusCode parameter.
+		response.json({ success: true }, HttpCodes.OK);
+	}
+}
 ```
 
 ### Naming conventions
 
 | Type             | Convention      | Example                             |
 | ---------------- | --------------- | ----------------------------------- |
-| Directories      | kebab-case      | `api/routes/`                       |
+| Directories      | kebab-case      | `routes/`                           |
 | TypeScript files | camelCase       | `config.ts`                         |
 | Variables        | camelCase       | `guildId`, `mappings`               |
 | Constants        | PascalCase enum | `Mappings.staryl`                   |

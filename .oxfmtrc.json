@@ -25,7 +25,7 @@
 			"unknown"
 		],
 		"newlinesBetween": false,
-		"internalPattern": ["#api/**", "#lib/**"]
+		"internalPattern": ["#lib/**"]
 	},
 	"overrides": [
 		{

@@ -16,13 +16,15 @@ await init({
 	returnEmptyString: false,
 });
 
-const client = new Client();
-await client.load();
-
-await container.server.listen({
-	host: envParseString("API_ADDRESS"),
-	port: envParseInteger("API_PORT"),
+const client = new Client({
+	api: {
+		listenOptions: {
+			host: envParseString("API_ADDRESS"),
+			port: envParseInteger("API_PORT"),
+		},
+	},
 });
+await client.load();
 
 void registerCommands();
 

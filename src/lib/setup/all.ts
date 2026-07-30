@@ -10,7 +10,7 @@ import "#lib/setup/logger";
 import "#lib/setup/prisma";
 import "#lib/setup/experiments";
 import "#lib/setup/experimentsExpiry";
-import "#lib/setup/fastify";
+import "@wolfstar/plugin-api/register";
 import "@wolfstar/shared-http-pieces/register";
 
 export async function setup() {
@@ -21,7 +21,4 @@ export async function setup() {
 	initializeSentry();
 
 	redisRun();
-
-	// Load all routes
-	await import("#api/routes/_load");
 }

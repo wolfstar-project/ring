@@ -110,14 +110,6 @@ export default defineConfig({
 					},
 				},
 				{
-					find: "#api",
-					replacement: "#api",
-					customResolver(source) {
-						const subPath = source.replace("#api/", "");
-						return resolveSource("src/api", subPath);
-					},
-				},
-				{
 					find: "#common",
 					replacement: "#common",
 					customResolver(source) {

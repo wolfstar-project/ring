@@ -56,10 +56,10 @@ framework requires non-empty `DISCORD_PUBLIC_KEY` and `DISCORD_TOKEN` to boot.
 
 ### Running the app
 
-| Service                   | Port | Purpose                       |
-| ------------------------- | ---- | ----------------------------- |
-| Discord HTTP interactions | 3000 | Slash commands (`HTTP_PORT`)  |
-| Fastify API               | 3001 | Guild config API (`API_PORT`) |
+| Service                   | Port | Purpose                             |
+| ------------------------- | ---- | ----------------------------------- |
+| Discord HTTP interactions | 3000 | Slash commands (`HTTP_PORT`)        |
+| Guild config API          | 3001 | `@wolfstar/plugin-api` (`API_PORT`) |
 
 ```bash
 pnpm dev          # build + start

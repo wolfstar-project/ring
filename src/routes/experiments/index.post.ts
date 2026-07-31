@@ -26,37 +26,33 @@ export class ExperimentsCreateRoute extends Route {
 		try {
 			body = await request.readBodyJson<Record<string, unknown>>();
 		} catch {
-			response.json(
+			return response.json(
 				{ success: false, message: "Missing request body" },
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 		if (typeof body !== "object" || isNullish(body) || Array.isArray(body)) {
-			response.json(
+			return response.json(
 				{ success: false, message: "Missing request body" },
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		const name = typeof body.name === "string" ? body.name.trim() : "";
 		if (isNullishOrEmpty(name)) {
-			response.json(
+			return response.json(
 				{ success: false, message: "A name is required" },
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		const category =
 			typeof body.category === "string" ? body.category.trim() : "";
 		if (isNullishOrEmpty(category)) {
-			response.json(
+			return response.json(
 				{ success: false, message: "A category is required" },
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		const rawEntityType = readStringField(body, "entity-type", "entityType");
@@ -65,14 +61,13 @@ export class ExperimentsCreateRoute extends Route {
 			rawEntityType !== "user" &&
 			rawEntityType !== "both"
 		) {
-			response.json(
+			return response.json(
 				{
 					success: false,
 					message: "Entity type must be one of guild, user, or both",
 				},
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		const startDate = parseDate(
@@ -80,24 +75,22 @@ export class ExperimentsCreateRoute extends Route {
 		);
 		const endDate = parseDate(readStringField(body, "end-date", "endDate"));
 		if (startDate === InvalidDate || endDate === InvalidDate) {
-			response.json(
+			return response.json(
 				{
 					success: false,
 					message: "One of the provided dates is invalid.",
 				},
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 		if (startDate && endDate && endDate < startDate) {
-			response.json(
+			return response.json(
 				{
 					success: false,
 					message: "The end date cannot be before the start date.",
 				},
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		const rollout =
@@ -129,10 +122,10 @@ export class ExperimentsCreateRoute extends Route {
 				createdBy,
 				botId,
 			});
-			response.json(serializeExperiment(experiment), HttpCodes.Created);
+			return response.json(serializeExperiment(experiment), HttpCodes.Created);
 		} catch (error) {
 			container.logger.error(error);
-			response.json(
+			return response.json(
 				{
 					success: false,
 					message: `Could not create the experiment. A flag with the key \`${id}\` may already exist.`,

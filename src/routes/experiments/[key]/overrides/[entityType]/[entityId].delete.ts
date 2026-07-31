@@ -16,14 +16,13 @@ export class ExperimentOverrideDeleteRoute extends Route {
 
 		const entityType = toOverrideEntityType(request.params.entityType);
 		if (entityType === null) {
-			response.json(
+			return response.json(
 				{
 					success: false,
 					message: "Entity type must be one of guild or user",
 				},
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		const count = await container.experiments.removeOverride(
@@ -35,6 +34,6 @@ export class ExperimentOverrideDeleteRoute extends Route {
 			count === 0
 				? "There was no override to remove."
 				: `Removed the override for \`${entityId}\`.`;
-		response.json({ success: true, count, message }, HttpCodes.OK);
+		return response.json({ success: true, count, message }, HttpCodes.OK);
 	}
 }

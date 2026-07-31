@@ -14,7 +14,7 @@ services:
 
   redis:
     container_name: redis
-    image: "redis:7-alpine"
+    image: "redis:8-alpine"
     command: ["redis-server", "--port", "8287", "--requirepass", "redis"]
     ports:
       - "8287:8287"

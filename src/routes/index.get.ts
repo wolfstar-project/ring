@@ -8,6 +8,6 @@ export class HelloRoute extends Route {
 	}
 
 	public run(_request: ApiRequest, response: ApiResponse) {
-		response.json({ data: "Hello world" }, HttpCodes.OK);
+		return response.json({ data: "Hello world" }, HttpCodes.OK);
 	}
 }

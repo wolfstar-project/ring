@@ -58,7 +58,7 @@ export class ExperimentsListRoute extends Route {
 		]);
 
 		const totalPages = Math.max(1, Math.ceil(total / ExperimentsPerPage));
-		response.json(
+		return response.json(
 			{
 				page,
 				totalPages,

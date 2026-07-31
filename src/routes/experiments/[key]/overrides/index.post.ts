@@ -24,41 +24,37 @@ export class ExperimentOverrideCreateRoute extends Route {
 		try {
 			body = await request.readBodyJson<Record<string, unknown>>();
 		} catch {
-			response.json(
+			return response.json(
 				{ success: false, message: "Missing request body" },
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 		if (typeof body !== "object" || isNullish(body) || Array.isArray(body)) {
-			response.json(
+			return response.json(
 				{ success: false, message: "Missing request body" },
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		const entityType = toOverrideEntityType(
 			readStringField(body, "entity-type", "entityType"),
 		);
 		if (entityType === null) {
-			response.json(
+			return response.json(
 				{
 					success: false,
 					message: "Entity type must be one of guild or user",
 				},
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		const entityId = readStringField(body, "entity-id", "entityId");
 		if (isNullishOrEmpty(entityId)) {
-			response.json(
+			return response.json(
 				{ success: false, message: "Missing entity ID" },
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		const rawBucket = body.bucket;
@@ -67,14 +63,13 @@ export class ExperimentOverrideCreateRoute extends Route {
 				? toBucketValue(rawBucket)
 				: null;
 		if (bucket === null) {
-			response.json(
+			return response.json(
 				{
 					success: false,
 					message: "A valid bucket is required when setting an override.",
 				},
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		// Reject overrides whose entity type does not match the experiment's
@@ -82,24 +77,22 @@ export class ExperimentOverrideCreateRoute extends Route {
 		// would silently never apply. `BOTH` accepts either entity type.
 		const experiment = await container.experiments.findById(key);
 		if (isNullish(experiment)) {
-			response.json(
+			return response.json(
 				{ success: false, message: "That experiment does not exist." },
 				HttpCodes.NotFound,
 			);
-			return;
 		}
 		if (
 			experiment.entityType !== "BOTH" &&
 			experiment.entityType !== entityType
 		) {
-			response.json(
+			return response.json(
 				{
 					success: false,
 					message: `This experiment targets ${experiment.entityType.toLowerCase()} entities; a ${entityType.toLowerCase()} override would never apply.`,
 				},
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		const createdBy =
@@ -114,10 +107,10 @@ export class ExperimentOverrideCreateRoute extends Route {
 				reason: normalizeOptional(readStringField(body, "reason")) ?? null,
 				createdBy,
 			});
-			response.json(override, HttpCodes.OK);
+			return response.json(override, HttpCodes.OK);
 		} catch (error) {
 			container.logger.error(error);
-			response.json(
+			return response.json(
 				{
 					success: false,
 					message: "That experiment does not exist.",

@@ -14,7 +14,7 @@ export class ExperimentDeleteRoute extends Route {
 		const key = request.params.key;
 
 		if (request.query.get("confirm") !== key) {
-			response.json(
+			return response.json(
 				{
 					success: false,
 					message:
@@ -22,18 +22,17 @@ export class ExperimentDeleteRoute extends Route {
 				},
 				HttpCodes.BadRequest,
 			);
-			return;
 		}
 
 		try {
 			await container.experiments.delete(key);
-			response.json(
+			return response.json(
 				{ success: true, message: `Deleted experiment \`${key}\`.` },
 				HttpCodes.OK,
 			);
 		} catch (error) {
 			container.logger.error(error);
-			response.json(
+			return response.json(
 				{ success: false, message: "That experiment does not exist." },
 				HttpCodes.NotFound,
 			);

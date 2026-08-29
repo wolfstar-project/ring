@@ -11,6 +11,7 @@ import "#lib/setup/prisma";
 import "#lib/setup/experiments";
 import "#lib/setup/experimentsExpiry";
 import "@wolfstar/plugin-api/register";
+import "@wolfstar/plugin-i18next/register";
 import "@wolfstar/shared-http-pieces/register";
 
 export async function setup() {

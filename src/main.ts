@@ -1,26 +1,31 @@
+import { fileURLToPath } from "node:url";
 import { setup } from "#lib/setup/all";
 import { envParseInteger, envParseString } from "@wolfstar/env-utilities";
 import { Client, container } from "@wolfstar/http-framework";
-import { init, load } from "@wolfstar/http-framework-i18n";
 import { registerCommands } from "@wolfstar/shared-http-pieces";
 import { createBanner } from "@wolfstar/start-banner";
 import { morning } from "gradient-string";
 
 await setup();
 
-await load(new URL("./locales", import.meta.url));
-await init({
-	fallbackLng: "en-US",
-	returnNull: false,
-	returnObjects: true,
-	returnEmptyString: false,
-});
-
 const client = new Client({
 	api: {
 		listenOptions: {
 			host: envParseString("API_ADDRESS"),
 			port: envParseInteger("API_PORT"),
+		},
+	},
+	// The locales are copied next to the bundle by the tsdown `copyPlugin`, so the directory is
+	// resolved from this module instead of the plugin default (`<root>/languages`).
+	i18n: {
+		defaultLanguageDirectory: fileURLToPath(
+			new URL("./locales", import.meta.url),
+		),
+		defaultName: "en-US",
+		i18next: {
+			returnNull: false,
+			returnObjects: true,
+			returnEmptyString: false,
 		},
 	},
 });

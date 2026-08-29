@@ -71,8 +71,13 @@
 - **Database**: PostgreSQL with Prisma ORM. Models use `@@map()` for snake_case
   table names, `@map()` for snake_case column names. Prisma `@default()` values
   must stay in sync with `LimitDefinitions`
-- **i18n**: Multi-language support via `@wolfstar/http-framework-i18n` with
-  locale JSON files in `src/locales/`
+- **i18n**: Multi-language support via `@wolfstar/plugin-i18next` with locale
+  JSON files in `src/locales/`. The plugin is activated by the side-effect
+  import `@wolfstar/plugin-i18next/register` in `src/lib/setup/all.ts`; it
+  installs an `InternationalizationHandler` on `container.i18n` and loads the
+  locales before the stores, so command builders are localized at registration
+  time. Locale discovery is configured through the `i18n` key of the `Client`
+  options in `src/main.ts`
 - **Container Pattern**: Services (Prisma, the `@wolfstar/plugin-api` API
   server, Logger) are attached to `container` from `@sapphire/pieces` with
   corresponding type augmentations
@@ -193,7 +198,8 @@ Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `style`, `perf`,
 - `@wolfstar/http-framework` - Discord HTTP interaction framework
 - `@wolfstar/plugin-api` - Standalone REST API server plugin (`Route`/
   `Middleware` pieces) for `@wolfstar/http-framework`
-- `@wolfstar/http-framework-i18n` - Internationalization for the HTTP framework
+- `@wolfstar/plugin-i18next` - i18next-powered internationalization plugin for
+  the HTTP framework
 - `@wolfstar/shared-http-pieces` - Shared command registration and Sentry
   integration
 - `@sapphire/result` - Rust-like Result type for error handling

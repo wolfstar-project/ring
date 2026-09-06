@@ -36,7 +36,7 @@
 		"@sapphire/utilities": "^3.18.2",
 		"@wolfstar/env-utilities": "^2.0.2",
 		"@wolfstar/http-framework": "^3.0.0",
-		"@wolfstar/http-framework-i18n": "^1.2.2",
+		"@wolfstar/http-framework-i18n": "^2.0.0",
 		"@wolfstar/logger": "^2.0.5",
 		"@wolfstar/plugin-api": "^1.0.0",
 		"@wolfstar/shared-http-pieces": "^1.2.6",

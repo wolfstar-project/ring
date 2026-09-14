@@ -29,10 +29,13 @@ command if the VM default is older.
 
 ### Infrastructure (PostgreSQL)
 
-Start the database (once per VM session):
+Start the database (once per VM session). `.docker/compose.yml` declares
+`postgres-data` as an external volume, so create it once before the first
+`up`:
 
 ```bash
-docker compose -f compose.dev.yml up postgres -d
+docker volume create postgres-data
+docker compose -f .docker/compose.yml up postgres -d
 ```
 
 Override in `src/.env.local` (gitignored):

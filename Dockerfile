@@ -4,7 +4,7 @@
 #   Base Stage     #
 # ================ #
 
-FROM --platform=$BUILDPLATFORM node:24-alpine AS base
+FROM node:24-alpine AS base
 
 WORKDIR /usr/src/app
 
@@ -36,9 +36,10 @@ ENV NODE_ENV="development"
 
 COPY --chown=node:node prisma/ prisma/
 COPY --chown=node:node prisma.config.ts prisma.config.ts
+COPY --chown=node:node scripts/ scripts/
 COPY --chown=node:node src/ src/
 COPY --chown=node:node tsconfig.base.json tsconfig.base.json
-COPY --chown=node:node tsdown.config.ts tsdown.config.ts
+COPY --chown=node:node stars.config.ts stars.config.ts
 
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm install --frozen-lockfile \
@@ -64,4 +65,4 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
 
 USER node
 
-CMD [ "pnpm", "run", "start" ]
+CMD [ "node", "dist/main.mjs" ]

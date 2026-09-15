@@ -6,11 +6,9 @@ import {
 	setRepository,
 } from "@wolfstar/shared-http-pieces";
 /* oxlint-disable import/first */
-import "#lib/setup/logger";
 import "#lib/setup/prisma";
 import "#lib/setup/experiments";
 import "#lib/setup/experimentsExpiry";
-import "@wolfstar/plugin-api/register";
 import "@wolfstar/shared-http-pieces/register";
 
 export async function setup() {

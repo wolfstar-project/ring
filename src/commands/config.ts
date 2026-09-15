@@ -15,7 +15,7 @@ import {
 	RegisterCommand,
 	RegisterSubcommand,
 } from "@wolfstar/http-framework";
-import { blue, bold, red, yellow } from "@wolfstar/logger";
+import { blue, bold, red, yellow } from "colorette";
 import {
 	MessageFlags,
 	PermissionFlagsBits,

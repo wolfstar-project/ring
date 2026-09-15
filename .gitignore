@@ -11,6 +11,7 @@ node_modules/
 # Output directories
 dist/
 dist-tsc/
+.stars/
 
 # Prisma generated client
 src/generated/

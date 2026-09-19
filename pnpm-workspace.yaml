@@ -1,7 +1,7 @@
 overrides:
   ansi-regex: ^6.2.2
   minimist: ^1.2.8
-  "@wolfstar/http-framework": ^4.0.2
+  "@wolfstar/http-framework": ^5.0.0
   "@wolfstar/plugin-i18next": 2.0.3
 
 allowBuilds:
@@ -18,7 +18,9 @@ minimumReleaseAge: 2880
 minimumReleaseAgeExclude:
   - "@eslint-community/eslint-plugin-eslint-comments@4.7.2"
   - "@wolfstar/cli@0.6.0"
+  - "@wolfstar/cli@1.0.0"
   - "@wolfstar/http-framework@4.0.0"
+  - "@wolfstar/http-framework@5.0.0"
   - "@wolfstar/plugin-i18next@2.0.3"
   - "@wolfstar/shared-http-pieces@2.0.2"
 

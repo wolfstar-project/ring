@@ -94,8 +94,9 @@
   before route dispatch
 - `src/commands/` - Discord slash commands using decorator pattern
 - `src/lib/setup/` - Application initialization (Prisma, Redis, experiments);
-  logger/i18n setup lives in the `Client` constructor options in `src/main.ts`
-  instead, via automatic plugin registration
+  i18n is configured via the `i18n` option on the `Client` constructor in
+  `src/main.ts` instead, and the logger (`container.logger`) is wired in
+  automatically by plugin registration — neither has a setup file here
 - `src/lib/common/` - Shared constants and guild limit definitions
 - `src/lib/types/` - TypeScript type definitions and env augmentations
 - `src/locales/` - Translation JSON files organized by locale

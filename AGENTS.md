@@ -10,7 +10,8 @@ when the schema changes).
 ## Quick reference
 
 - Package manager: `pnpm`
-- Build: `pnpm build` (tsdown / rolldown)
+- Build: `pnpm build` (Stars CLI — `@wolfstar/cli`, backed by tsdown/rolldown;
+  config in `stars.config.ts`)
 - Lint + format: `pnpm lint` (oxlint + oxfmt --check); auto-fix with
   `pnpm lint:fix`
 - Prisma client output: `src/generated/prisma/` — regenerate with
@@ -62,9 +63,9 @@ framework requires non-empty `DISCORD_PUBLIC_KEY` and `DISCORD_TOKEN` to boot.
 | Guild config API          | 3001 | `@wolfstar/plugin-api` (`API_PORT`) |
 
 ```bash
-pnpm dev          # build + start
+pnpm dev          # stars dev (build + start, watches for changes)
 pnpm lint         # oxlint + oxfmt
-pnpm build        # tsdown build (CI also runs prisma:generate first)
+pnpm build        # stars build (CI also runs prisma:generate first)
 ```
 
 Quick smoke test once running:

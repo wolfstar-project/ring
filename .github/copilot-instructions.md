@@ -71,11 +71,18 @@
 - **Database**: PostgreSQL with Prisma ORM. Models use `@@map()` for snake_case
   table names, `@map()` for snake_case column names. Prisma `@default()` values
   must stay in sync with `LimitDefinitions`
-- **i18n**: Multi-language support via `@wolfstar/http-framework-i18n` with
-  locale JSON files in `src/locales/`
+- **i18n**: Multi-language support via `@wolfstar/plugin-i18next`, configured
+  through the `i18n` option passed to the `Client` constructor in
+  `src/main.ts` (`defaultLanguageDirectory`, `defaultName`, `defaultNS`,
+  `defaultMissingKey`, `i18next`), with locale JSON files in `src/locales/`
 - **Container Pattern**: Services (Prisma, the `@wolfstar/plugin-api` API
-  server, Logger) are attached to `container` from `@sapphire/pieces` with
-  corresponding type augmentations
+  server, the `@wolfstar/plugin-logger` Logger) are attached to `container`
+  from `@sapphire/pieces` with corresponding type augmentations. Plugins are
+  wired in automatically by `@wolfstar/http-framework`'s
+  `@wolfstar/plugin-*/register` side-effect injection — only
+  `@wolfstar/shared-http-pieces/register` needs an explicit import (in
+  `src/lib/setup/all.ts`); don't add manual setup files for plugins like the
+  logger
 
 ### Directory Structure
 
@@ -86,7 +93,9 @@
   `@wolfstar/plugin-api` `Middleware` pieces, run in ascending `position` order
   before route dispatch
 - `src/commands/` - Discord slash commands using decorator pattern
-- `src/lib/setup/` - Application initialization (env, Prisma, logger)
+- `src/lib/setup/` - Application initialization (Prisma, Redis, experiments);
+  logger/i18n setup lives in the `Client` constructor options in `src/main.ts`
+  instead, via automatic plugin registration
 - `src/lib/common/` - Shared constants and guild limit definitions
 - `src/lib/types/` - TypeScript type definitions and env augmentations
 - `src/locales/` - Translation JSON files organized by locale
@@ -165,10 +174,12 @@ Two non-obvious gotchas:
 
 ```bash
 pnpm install              # Install dependencies
-pnpm build                # Build TypeScript via tsdown
+pnpm build                # Build via Stars CLI (stars build), config in stars.config.ts
 pnpm start                # Start the application
-pnpm dev                  # Build + start
-pnpm watch                # Watch mode for development
+pnpm dev                  # stars dev — build + start, watches for changes
+pnpm watch                # Alias for `pnpm dev`
+pnpm i18n:generate        # Regenerate i18n types (stars codegen)
+pnpm stars:info           # Print Stars CLI environment/config info
 pnpm lint                 # Check lint and formatting (oxlint + oxfmt)
 pnpm lint:fix             # Auto-fix lint and formatting issues
 pnpm prisma:generate      # Regenerate Prisma client after schema changes
@@ -193,9 +204,14 @@ Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `style`, `perf`,
 - `@wolfstar/http-framework` - Discord HTTP interaction framework
 - `@wolfstar/plugin-api` - Standalone REST API server plugin (`Route`/
   `Middleware` pieces) for `@wolfstar/http-framework`
-- `@wolfstar/http-framework-i18n` - Internationalization for the HTTP framework
+- `@wolfstar/plugin-i18next` - Internationalization plugin for the HTTP
+  framework (replaces the old `@wolfstar/http-framework-i18n` /
+  `@wolfstar/logger` split)
+- `@wolfstar/plugin-logger` - Logger plugin, attaches `container.logger`
 - `@wolfstar/shared-http-pieces` - Shared command registration and Sentry
   integration
+- `@wolfstar/cli` (dev) - Stars CLI; provides the `stars build` / `stars dev`
+  / `stars codegen` commands, configured via `stars.config.ts`
 - `@sapphire/result` - Rust-like Result type for error handling
 - `@sapphire/utilities` - General utilities (`cast`, `isNullish`,
   `isNullishOrEmpty`)

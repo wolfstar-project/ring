@@ -1,8 +1,8 @@
 overrides:
-  ansi-regex: ^6.2.2
+  ansi-regex: ^6.3.0
   minimist: ^1.2.8
-  "@wolfstar/http-framework": ^5.0.0
-  "@wolfstar/plugin-i18next": 2.0.3
+  "@wolfstar/http-framework": ^5.1.0
+  "@wolfstar/plugin-i18next": 2.0.4
 
 allowBuilds:
   "@prisma/client": true

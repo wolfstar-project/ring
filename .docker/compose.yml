@@ -41,7 +41,8 @@ services:
       - postgres
     env_file:
       - ../src/.env
-      - ../src/.env.development.local
+      - path: ../src/.env.development.local
+        required: false
     image: "ghcr.io/wolfstar-project/ring:latest"
     ports:
       - "8282:8282"
@@ -52,3 +53,4 @@ services:
 volumes:
   postgres-data:
     external: true
+  redis-data:

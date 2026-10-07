@@ -59,7 +59,7 @@
 		"@sapphire/ts-config": "^5.0.3",
 		"@types/gradient-string": "^1.1.6",
 		"@types/node": "^24.13.5",
-		"@wolfstar/cli": "^1.0.0",
+		"@wolfstar/cli": "^2.3.0",
 		"cz-conventional-changelog": "^3.3.0",
 		"eslint": "^10.10.0",
 		"eslint-plugin-regexp": "^3.3.0",

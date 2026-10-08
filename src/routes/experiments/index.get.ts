@@ -58,14 +58,11 @@ export class ExperimentsListRoute extends Route {
 		]);
 
 		const totalPages = Math.max(1, Math.ceil(total / ExperimentsPerPage));
-		return response.json(
-			{
-				page,
-				totalPages,
-				total,
-				experiments: experiments.map(serializeExperiment),
-			},
-			HttpCodes.OK,
-		);
+		return response.status(HttpCodes.OK).json({
+			page,
+			totalPages,
+			total,
+			experiments: experiments.map(serializeExperiment),
+		});
 	}
 }

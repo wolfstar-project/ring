@@ -21,19 +21,17 @@ export class AuthMiddleware extends Middleware {
 		if (!request.route || !isAuthenticated(request.route)) return;
 
 		if (isNullishOrEmpty(request.headers.authorization)) {
-			response.json(
-				{ success: false, message: "Missing authorization" },
-				HttpCodes.Unauthorized,
-			);
+			response
+				.status(HttpCodes.Unauthorized)
+				.json({ success: false, message: "Missing authorization" });
 			return;
 		}
 
 		const mappings = getMappings(request.headers.authorization);
 		if (!mappings) {
-			response.json(
-				{ success: false, message: "Missing access to this resource" },
-				HttpCodes.Forbidden,
-			);
+			response
+				.status(HttpCodes.Forbidden)
+				.json({ success: false, message: "Missing access to this resource" });
 			return;
 		}
 

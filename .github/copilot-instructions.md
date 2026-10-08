@@ -72,17 +72,16 @@
   table names, `@map()` for snake_case column names. Prisma `@default()` values
   must stay in sync with `LimitDefinitions`
 - **i18n**: Multi-language support via `@wolfstar/plugin-i18next`, configured
-  through the `i18n` option passed to the `Client` constructor in
-  `src/main.ts` (`defaultLanguageDirectory`, `defaultName`, `defaultNS`,
-  `defaultMissingKey`, `i18next`), with locale JSON files in `src/locales/`
+  through the `i18n` option passed to the `Client` constructor in `src/main.ts`
+  (`defaultLanguageDirectory`, `defaultName`, `defaultNS`, `defaultMissingKey`,
+  `i18next`), with locale JSON files in `src/locales/`
 - **Container Pattern**: Services (Prisma, the `@wolfstar/plugin-api` API
-  server, the `@wolfstar/plugin-logger` Logger) are attached to `container`
-  from `@sapphire/pieces` with corresponding type augmentations. Plugins are
-  wired in automatically by `@wolfstar/http-framework`'s
-  `@wolfstar/plugin-*/register` side-effect injection — only
-  `@wolfstar/shared-http-pieces/register` needs an explicit import (in
-  `src/lib/setup/all.ts`); don't add manual setup files for plugins like the
-  logger
+  server, the `@wolfstar/plugin-logger` Logger) are attached to `container` from
+  `@sapphire/pieces` with corresponding type augmentations. Plugins are wired in
+  automatically by `@wolfstar/http-framework`'s `@wolfstar/plugin-*/register`
+  side-effect injection — only `@wolfstar/shared-http-pieces/register` needs an
+  explicit import (in `src/lib/setup/all.ts`); don't add manual setup files for
+  plugins like the logger
 
 ### Directory Structure
 
@@ -211,8 +210,8 @@ Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `style`, `perf`,
 - `@wolfstar/plugin-logger` - Logger plugin, attaches `container.logger`
 - `@wolfstar/shared-http-pieces` - Shared command registration and Sentry
   integration
-- `@wolfstar/cli` (dev) - Stars CLI; provides the `stars build` / `stars dev`
-  / `stars codegen` commands, configured via `stars.config.ts`
+- `@wolfstar/cli` (dev) - Stars CLI; provides the `stars build` / `stars dev` /
+  `stars codegen` commands, configured via `stars.config.ts`
 - `@sapphire/result` - Rust-like Result type for error handling
 - `@sapphire/utilities` - General utilities (`cast`, `isNullish`,
   `isNullishOrEmpty`)

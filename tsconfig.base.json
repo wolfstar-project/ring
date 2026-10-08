@@ -1,5 +1,5 @@
 {
-	"extends": ["./.stars/tsconfig.json", "@sapphire/ts-config/verbatim"],
+	"extends": ["./.stars/tsconfig.app.json", "@sapphire/ts-config/verbatim"],
 	"compilerOptions": {
 		"lib": ["ESNext", "DOM"]
 	}

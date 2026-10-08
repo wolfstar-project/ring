@@ -15,16 +15,17 @@ export class GuildRoute extends Route {
 		try {
 			id = BigInt(request.params.id);
 		} catch {
-			return response.json(
-				{ success: false, message: "Invalid Guild ID" },
-				HttpCodes.BadRequest,
-			);
+			return response
+				.status(HttpCodes.BadRequest)
+				.json({ success: false, message: "Invalid Guild ID" });
 		}
 
 		const data = await container.prisma.guild.findFirst({
 			where: { id },
 			select: request.mappings.properties,
 		});
-		return response.json(data ?? request.mappings.defaults, HttpCodes.OK);
+		return response
+			.status(HttpCodes.OK)
+			.json(data ?? request.mappings.defaults);
 	}
 }

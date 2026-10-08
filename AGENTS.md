@@ -30,8 +30,8 @@ command if the VM default is older.
 
 ### Infrastructure (PostgreSQL)
 
-The `postgres-data` volume is declared `external: true`, so it must exist
-before the first `up` (once per VM, not per session):
+The `postgres-data` volume is declared `external: true`, so it must exist before
+the first `up` (once per VM, not per session):
 
 ```bash
 docker volume create postgres-data

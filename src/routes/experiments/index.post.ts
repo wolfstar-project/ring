@@ -24,35 +24,31 @@ export class ExperimentsCreateRoute extends Route {
 	public async run(request: ApiRequest, response: ApiResponse) {
 		let body: Record<string, unknown>;
 		try {
-			body = await request.readBodyJson<Record<string, unknown>>();
+			body = (await request.readBodyJson()) as Record<string, unknown>;
 		} catch {
-			return response.json(
-				{ success: false, message: "Missing request body" },
-				HttpCodes.BadRequest,
-			);
+			return response
+				.status(HttpCodes.BadRequest)
+				.json({ success: false, message: "Missing request body" });
 		}
 		if (typeof body !== "object" || isNullish(body) || Array.isArray(body)) {
-			return response.json(
-				{ success: false, message: "Missing request body" },
-				HttpCodes.BadRequest,
-			);
+			return response
+				.status(HttpCodes.BadRequest)
+				.json({ success: false, message: "Missing request body" });
 		}
 
 		const name = typeof body.name === "string" ? body.name.trim() : "";
 		if (isNullishOrEmpty(name)) {
-			return response.json(
-				{ success: false, message: "A name is required" },
-				HttpCodes.BadRequest,
-			);
+			return response
+				.status(HttpCodes.BadRequest)
+				.json({ success: false, message: "A name is required" });
 		}
 
 		const category =
 			typeof body.category === "string" ? body.category.trim() : "";
 		if (isNullishOrEmpty(category)) {
-			return response.json(
-				{ success: false, message: "A category is required" },
-				HttpCodes.BadRequest,
-			);
+			return response
+				.status(HttpCodes.BadRequest)
+				.json({ success: false, message: "A category is required" });
 		}
 
 		const rawEntityType = readStringField(body, "entity-type", "entityType");
@@ -61,13 +57,10 @@ export class ExperimentsCreateRoute extends Route {
 			rawEntityType !== "user" &&
 			rawEntityType !== "both"
 		) {
-			return response.json(
-				{
-					success: false,
-					message: "Entity type must be one of guild, user, or both",
-				},
-				HttpCodes.BadRequest,
-			);
+			return response.status(HttpCodes.BadRequest).json({
+				success: false,
+				message: "Entity type must be one of guild, user, or both",
+			});
 		}
 
 		const startDate = parseDate(
@@ -75,22 +68,16 @@ export class ExperimentsCreateRoute extends Route {
 		);
 		const endDate = parseDate(readStringField(body, "end-date", "endDate"));
 		if (startDate === InvalidDate || endDate === InvalidDate) {
-			return response.json(
-				{
-					success: false,
-					message: "One of the provided dates is invalid.",
-				},
-				HttpCodes.BadRequest,
-			);
+			return response.status(HttpCodes.BadRequest).json({
+				success: false,
+				message: "One of the provided dates is invalid.",
+			});
 		}
 		if (startDate && endDate && endDate < startDate) {
-			return response.json(
-				{
-					success: false,
-					message: "The end date cannot be before the start date.",
-				},
-				HttpCodes.BadRequest,
-			);
+			return response.status(HttpCodes.BadRequest).json({
+				success: false,
+				message: "The end date cannot be before the start date.",
+			});
 		}
 
 		const rollout =
@@ -122,16 +109,15 @@ export class ExperimentsCreateRoute extends Route {
 				createdBy,
 				botId,
 			});
-			return response.json(serializeExperiment(experiment), HttpCodes.Created);
+			return response
+				.status(HttpCodes.Created)
+				.json(serializeExperiment(experiment));
 		} catch (error) {
 			container.logger.error(error);
-			return response.json(
-				{
-					success: false,
-					message: `Could not create the experiment. A flag with the key \`${id}\` may already exist.`,
-				},
-				HttpCodes.Conflict,
-			);
+			return response.status(HttpCodes.Conflict).json({
+				success: false,
+				message: `Could not create the experiment. A flag with the key \`${id}\` may already exist.`,
+			});
 		}
 	}
 }

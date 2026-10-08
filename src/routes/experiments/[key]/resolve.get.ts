@@ -16,18 +16,16 @@ export class ExperimentResolveRoute extends Route {
 
 		const entityType = request.query.get("entityType");
 		if (entityType !== "guild" && entityType !== "user") {
-			return response.json(
-				{ success: false, message: "Invalid entity type" },
-				HttpCodes.BadRequest,
-			);
+			return response
+				.status(HttpCodes.BadRequest)
+				.json({ success: false, message: "Invalid entity type" });
 		}
 
 		const entityId = request.query.get("entityId");
 		if (isNullishOrEmpty(entityId)) {
-			return response.json(
-				{ success: false, message: "Missing entity ID" },
-				HttpCodes.BadRequest,
-			);
+			return response
+				.status(HttpCodes.BadRequest)
+				.json({ success: false, message: "Missing entity ID" });
 		}
 
 		const botId = request.query.get("botId");
@@ -40,6 +38,6 @@ export class ExperimentResolveRoute extends Route {
 				botId,
 			},
 		);
-		return response.json(result, HttpCodes.OK);
+		return response.status(HttpCodes.OK).json(result);
 	}
 }

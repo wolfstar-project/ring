@@ -17,16 +17,14 @@ export class ExperimentRoute extends Route {
 
 		const experiment = await container.experiments.findById(key);
 		if (isNullish(experiment)) {
-			return response.json(
-				{ success: false, message: "That experiment does not exist." },
-				HttpCodes.NotFound,
-			);
+			return response
+				.status(HttpCodes.NotFound)
+				.json({ success: false, message: "That experiment does not exist." });
 		}
 
 		const overrideCount = await container.experiments.countOverrides(key);
-		return response.json(
-			{ ...serializeExperiment(experiment), overrideCount },
-			HttpCodes.OK,
-		);
+		return response
+			.status(HttpCodes.OK)
+			.json({ ...serializeExperiment(experiment), overrideCount });
 	}
 }

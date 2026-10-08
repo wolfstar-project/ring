@@ -25,28 +25,26 @@ export class ExperimentUpdateRoute extends Route {
 
 		let body: Record<string, unknown>;
 		try {
-			body = await request.readBodyJson<Record<string, unknown>>();
+			body = (await request.readBodyJson()) as Record<string, unknown>;
 		} catch {
-			return response.json(
-				{ success: false, message: "Missing request body" },
-				HttpCodes.BadRequest,
-			);
+			return response
+				.status(HttpCodes.BadRequest)
+				.json({ success: false, message: "Missing request body" });
 		}
 		if (isNullish(body) || typeof body !== "object" || Array.isArray(body)) {
-			return response.json(
-				{ success: false, message: "The request body must be a JSON object" },
-				HttpCodes.BadRequest,
-			);
+			return response.status(HttpCodes.BadRequest).json({
+				success: false,
+				message: "The request body must be a JSON object",
+			});
 		}
 
 		const endDate = parseEditableDate(
 			readStringField(body, "end-date", "endDate"),
 		);
 		if (endDate === InvalidDate) {
-			return response.json(
-				{ success: false, message: "The provided end date is invalid." },
-				HttpCodes.BadRequest,
-			);
+			return response
+				.status(HttpCodes.BadRequest)
+				.json({ success: false, message: "The provided end date is invalid." });
 		}
 
 		// A concrete new end date must not fall before the stored start date,
@@ -54,23 +52,16 @@ export class ExperimentUpdateRoute extends Route {
 		if (endDate instanceof Date) {
 			const existing = await container.experiments.findById(key);
 			if (isNullish(existing)) {
-				return response.json(
-					{
-						success: false,
-						message: "That experiment does not exist.",
-					},
-					HttpCodes.NotFound,
-				);
+				return response.status(HttpCodes.NotFound).json({
+					success: false,
+					message: "That experiment does not exist.",
+				});
 			}
 			if (existing.startDate && endDate < existing.startDate) {
-				return response.json(
-					{
-						success: false,
-						message:
-							"The end date cannot be before the experiment's start date.",
-					},
-					HttpCodes.BadRequest,
-				);
+				return response.status(HttpCodes.BadRequest).json({
+					success: false,
+					message: "The end date cannot be before the experiment's start date.",
+				});
 			}
 		}
 
@@ -85,13 +76,14 @@ export class ExperimentUpdateRoute extends Route {
 
 		try {
 			const experiment = await container.experiments.update(key, data);
-			return response.json(serializeExperiment(experiment), HttpCodes.OK);
+			return response
+				.status(HttpCodes.OK)
+				.json(serializeExperiment(experiment));
 		} catch (error) {
 			container.logger.error(error);
-			return response.json(
-				{ success: false, message: "That experiment does not exist." },
-				HttpCodes.NotFound,
-			);
+			return response
+				.status(HttpCodes.NotFound)
+				.json({ success: false, message: "That experiment does not exist." });
 		}
 	}
 }

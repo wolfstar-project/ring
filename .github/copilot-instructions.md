@@ -145,7 +145,7 @@ export class ExampleRoute extends Route {
 	public async run(request: ApiRequest, response: ApiResponse) {
 		// `request.mappings` is populated by the `auth` middleware because
 		// this route is decorated with `@Authenticated()`.
-		response.json({ success: true, mappings: request.mappings }, HttpCodes.OK);
+		response.status(HttpCodes.OK).json({ success: true, mappings: request.mappings });
 	}
 }
 ```
@@ -156,13 +156,8 @@ before any route's `run()` and writes 401/403 itself when the check fails —
 routes don't need to check auth manually. Omit the decorator for public routes
 (e.g. `src/routes/index.get.ts`).
 
-Two non-obvious gotchas:
+One non-obvious gotcha:
 
-- **Status codes go through `response.json(body, statusCode)`, not
-  `response.status(code).json(body)`.** `ApiResponse#json()` defaults its
-  `statusCode` parameter to `HttpCodes.OK`, so chaining `.status(x).json(y)`
-  silently overwrites `x` back to 200 — this fails with no error, only a wrong
-  status code on the wire.
 - **Every route needs an explicit unique `name`.** `@sapphire/pieces` keys its
   route store by filename alone (not full path), so two files named e.g.
   `index.get.ts` in different directories collide — the later-loaded one

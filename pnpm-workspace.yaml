@@ -1,7 +1,7 @@
 overrides:
-  ansi-regex: ^6.2.2
+  ansi-regex: ^6.4.0
   minimist: ^1.2.8
-  "@wolfstar/http-framework": ^6.2.2
+  "@wolfstar/http-framework": ^6.4.0
   "@wolfstar/plugin-i18next": 2.2.0
 
 allowBuilds:

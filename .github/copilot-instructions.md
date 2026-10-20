@@ -145,7 +145,9 @@ export class ExampleRoute extends Route {
 	public async run(request: ApiRequest, response: ApiResponse) {
 		// `request.mappings` is populated by the `auth` middleware because
 		// this route is decorated with `@Authenticated()`.
-		response.status(HttpCodes.OK).json({ success: true, mappings: request.mappings });
+		response
+			.status(HttpCodes.OK)
+			.json({ success: true, mappings: request.mappings });
 	}
 }
 ```

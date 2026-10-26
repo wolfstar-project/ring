@@ -177,6 +177,8 @@ pnpm dev                  # stars dev — build + start, watches for changes
 pnpm watch                # Alias for `pnpm dev`
 pnpm i18n:generate        # Regenerate i18n types (stars codegen)
 pnpm stars:info           # Print Stars CLI environment/config info
+pnpm exec stars prepare   # Generate the .stars/ TypeScript config; required before
+                          # prisma:generate on a clean/--ignore-scripts install (see CI)
 pnpm lint                 # Check lint and formatting (oxlint + oxfmt)
 pnpm lint:fix             # Auto-fix lint and formatting issues
 pnpm prisma:generate      # Regenerate Prisma client after schema changes
@@ -218,6 +220,12 @@ Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `style`, `perf`,
 ## Troubleshooting
 
 - **Build issues:** Run `pnpm clean` then `pnpm build`
+- **`prisma:generate` fails with
+  `File './.stars/tsconfig.app.json' not found`:** `tsconfig.base.json` extends
+  the Stars-generated `.stars/tsconfig.app.json`, which a normal `pnpm install`
+  creates as a side effect but a `--ignore-scripts` install does not. Run
+  `pnpm exec stars prepare` first (CI does this before `pnpm prisma:generate` in
+  `continuous-integration.yml`)
 - **Prisma types stale:** Run `pnpm prisma:generate` after schema changes
 - **Command not appearing:** Commands auto-register on startup via
   `@wolfstar/shared-http-pieces`; check Discord developer portal

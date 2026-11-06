@@ -72,7 +72,10 @@ framework requires non-empty `DISCORD_PUBLIC_KEY` and `DISCORD_TOKEN` to boot.
 ```bash
 pnpm dev          # stars dev (build + start, watches for changes)
 pnpm lint         # oxlint + oxfmt
-pnpm build        # stars build (CI also runs prisma:generate first)
+pnpm build        # stars build (CI also runs `stars prepare` then
+                  # prisma:generate first — see Troubleshooting in
+                  # copilot-instructions.md if prisma:generate fails on a
+                  # clean/--ignore-scripts install)
 ```
 
 Quick smoke test once running:

@@ -12,14 +12,19 @@ model Guild {
   id                          BigInt @id
   /// The maximum amount of YouTube subscriptions.
   /// @bot Acrysel
-  /// @tier 5 ($3)
-  /// @tier 10 ($5)
-  maximumYouTubeSubscriptions Int    @default(3) @map("maximum_youtube_subscriptions") @db.SmallInt
-  /// The maximum amount of Twitch subscriptions.
+  /// @tier 20 ($3)
+  /// @tier 30 ($5)
+  maximumYouTubeSubscriptions Int    @default(10) @map("maximum_youtube_subscriptions") @db.SmallInt
+  /// The maximum amount of Twitch live subscriptions.
   /// @bot Acrysel
-  /// @tier 10 ($3)
-  /// @tier 20 ($5)
-  maximumTwitchSubscriptions  Int    @default(5) @map("maximum_twitch_subscriptions") @db.SmallInt
+  /// @tier 25 ($3)
+  /// @tier 35 ($5)
+  maximumTwitchSubscriptions  Int    @default(15) @map("maximum_twitch_subscriptions") @db.SmallInt
+  /// The maximum amount of Reddit subscriptions.
+  /// @bot Acrysel
+  /// @tier 45 ($3)
+  /// @tier 60 ($5)
+  maximumRedditSubscriptions  Int    @default(30) @map("maximum_reddit_subscriptions") @db.SmallInt
 
   /// The maximum amount of filtered words.
   /// @bot WolfStar

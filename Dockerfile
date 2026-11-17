@@ -47,8 +47,12 @@ COPY --chown=node:node src/ src/
 COPY --chown=node:node tsconfig.base.json tsconfig.base.json
 COPY --chown=node:node stars.config.ts stars.config.ts
 
+# `tsconfig.base.json` extends `.stars/tsconfig.app.json`, which `stars prepare` writes and git
+# ignores. Without it `prisma generate` stops at "File './.stars/tsconfig.app.json' not found",
+# as CI would without the same step.
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm install --frozen-lockfile \
+    && pnpm exec stars prepare \
     && pnpm run prisma:generate \
     && pnpm run build
 

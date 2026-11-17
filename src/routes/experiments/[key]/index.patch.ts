@@ -17,7 +17,12 @@ import { Route } from "@wolfstar/plugin-api";
 @Authenticated()
 export class ExperimentUpdateRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
-		super(context, { name: "experiments-update-patch" });
+		// A named route takes its path and method from these options, not from its file name.
+		super(context, {
+			name: "experiments-update-patch",
+			route: "/experiments/[key]",
+			methods: ["PATCH"],
+		});
 	}
 
 	public async run(request: ApiRequest, response: ApiResponse) {

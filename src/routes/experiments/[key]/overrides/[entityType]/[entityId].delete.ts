@@ -8,7 +8,12 @@ import { Route } from "@wolfstar/plugin-api";
 @Authenticated()
 export class ExperimentOverrideDeleteRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
-		super(context, { name: "experiments-overrides-delete" });
+		// A named route takes its path and method from these options, not from its file name.
+		super(context, {
+			name: "experiments-overrides-delete",
+			route: "/experiments/[key]/overrides/[entityType]/[entityId]",
+			methods: ["DELETE"],
+		});
 	}
 
 	public async run(request: ApiRequest, response: ApiResponse) {

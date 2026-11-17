@@ -7,7 +7,12 @@ import { Route } from "@wolfstar/plugin-api";
 @Authenticated()
 export class GuildRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
-		super(context, { name: "guilds-detail-get" });
+		// A named route takes its path and method from these options, not from its file name.
+		super(context, {
+			name: "guilds-detail-get",
+			route: "/guilds/[id]",
+			methods: ["GET"],
+		});
 	}
 
 	public async run(request: ApiRequest, response: ApiResponse) {

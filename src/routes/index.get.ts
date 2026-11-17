@@ -4,7 +4,8 @@ import { Route } from "@wolfstar/plugin-api";
 
 export class HelloRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
-		super(context, { name: "root-hello-get" });
+		// A named route takes its path and method from these options, not from its file name.
+		super(context, { name: "root-hello-get", route: "/", methods: ["GET"] });
 	}
 
 	public run(_request: ApiRequest, response: ApiResponse) {

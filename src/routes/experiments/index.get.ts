@@ -12,7 +12,12 @@ const ExperimentsPerPage = 10;
 @Authenticated()
 export class ExperimentsListRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
-		super(context, { name: "experiments-list-get" });
+		// A named route takes its path and method from these options, not from its file name.
+		super(context, {
+			name: "experiments-list-get",
+			route: "/experiments",
+			methods: ["GET"],
+		});
 	}
 
 	public async run(request: ApiRequest, response: ApiResponse) {

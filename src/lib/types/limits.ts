@@ -1,6 +1,7 @@
 export interface StarylLimits {
 	maximumYouTubeSubscriptions: number;
 	maximumTwitchSubscriptions: number;
+	maximumRedditSubscriptions: number;
 }
 
 export interface WolfstarLimits {

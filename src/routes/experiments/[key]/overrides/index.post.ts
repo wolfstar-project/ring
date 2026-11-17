@@ -14,7 +14,12 @@ import { Route } from "@wolfstar/plugin-api";
 @Authenticated()
 export class ExperimentOverrideCreateRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
-		super(context, { name: "experiments-overrides-create-post" });
+		// A named route takes its path and method from these options, not from its file name.
+		super(context, {
+			name: "experiments-overrides-create-post",
+			route: "/experiments/[key]/overrides",
+			methods: ["POST"],
+		});
 	}
 
 	public async run(request: ApiRequest, response: ApiResponse) {

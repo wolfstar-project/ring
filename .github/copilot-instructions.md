@@ -60,12 +60,14 @@
 - **Internal API**: `@wolfstar/plugin-api` REST endpoints (`src/routes/`) that
   serve guild configuration data to other bots in the WolfStar Network (Staryl,
   WolfStar), authenticated via bearer tokens. Routes are `Route` pieces
-  auto-loaded from `src/routes/`, with the path/method inferred from file
-  location (folder segments, `[param]` dynamic segments, and a `.<method>`
-  filename suffix). Authentication is enforced centrally by the `auth`
-  `Middleware` piece (`src/middlewares/auth.ts`) for any route class decorated
-  with `@Authenticated()` (`#lib/api/decorators`) — see "API Route Structure"
-  below
+  auto-loaded from `src/routes/`. File location should mirror the path by
+  convention (folder segments, `[param]` dynamic segments, a `.<method>`
+  filename suffix), but plugin-api takes the actual path and HTTP method from
+  the `route` and `methods` options passed to `super()`, not from the file name
+  — omitting them means the route matches nothing and 404s. Authentication is
+  enforced centrally by the `auth` `Middleware` piece (`src/middlewares/auth.ts`)
+  for any route class decorated with `@Authenticated()` (`#lib/api/decorators`)
+  — see "API Route Structure" below
 - **Guild limits**: Canonical defaults, ranges, and bot mappings live in
   `src/lib/common/limits.ts` (`LimitDefinitions`, `Mappings`, `getMappings`)
 - **Database**: PostgreSQL with Prisma ORM. Models use `@@map()` for snake_case
@@ -125,11 +127,13 @@ export class UserCommand extends Command {
 
 ### API Route Structure
 
-Routes are `Route` pieces loaded from `src/routes/`. The path and method are
-inferred from the file's location: folder segments become path segments,
-`[param]` folders become dynamic segments, `index` collapses into its parent,
-and a `.<method>` filename suffix selects the HTTP method (e.g.
-`src/routes/guilds/[id].get.ts` registers `GET /guilds/[id]`):
+Routes are `Route` pieces loaded from `src/routes/`. File location should
+mirror the registered path by convention: folder segments become path
+segments, `[param]` folders become dynamic segments, `index` collapses into
+its parent, and a `.<method>` filename suffix should match the HTTP method
+(e.g. `src/routes/guilds/[id].get.ts` for `GET /guilds/[id]`) — but
+plugin-api does **not** infer the path or method from the file name. Pass
+them explicitly as `route` and `methods` in the options object:
 
 ```typescript
 import { Authenticated } from "#lib/api/decorators";
@@ -139,7 +143,7 @@ import { Route, type ApiRequest, type ApiResponse } from "@wolfstar/plugin-api";
 @Authenticated()
 export class ExampleRoute extends Route {
 	public constructor(context: Route.LoaderContext) {
-		super(context, { name: "example-get" });
+		super(context, { name: "example-get", route: "/example", methods: ["GET"] });
 	}
 
 	public async run(request: ApiRequest, response: ApiResponse) {
@@ -158,7 +162,7 @@ before any route's `run()` and writes 401/403 itself when the check fails —
 routes don't need to check auth manually. Omit the decorator for public routes
 (e.g. `src/routes/index.get.ts`).
 
-One non-obvious gotcha:
+Two non-obvious gotchas:
 
 - **Every route needs an explicit unique `name`.** `@sapphire/pieces` keys its
   route store by filename alone (not full path), so two files named e.g.
@@ -166,6 +170,12 @@ One non-obvious gotcha:
   silently wins and the other's route never gets registered (no error, no
   warning, the endpoint just 405s). Pass `{ name: "<unique-slug>" }` in the
   constructor's `super()` call for every route file, as shown above.
+- **Every route also needs explicit `route` and `methods`.** Without them the
+  route loads but matches no request — every request to it 404s, with no error
+  or warning at load time (see PR #130, where all ten existing routes were
+  missing these and 404ed in production). Set `route` to the path the file's
+  location implies and `methods` to the HTTP method(s) implied by its
+  `.<method>` suffix.
 
 ## Development Commands
 
@@ -198,6 +208,11 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `style`, `perf`,
 `ci`, `build`
 
+PR titles follow the same format, with a lowercase subject. CI
+(`semantic-pull-requests.yml`) lints the title and posts a sticky comment
+explaining the fix when it doesn't match; the comment is removed once the
+title is valid.
+
 ## Key Dependencies
 
 - `@wolfstar/http-framework` - Discord HTTP interaction framework
@@ -225,7 +240,8 @@ Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `style`, `perf`,
   the Stars-generated `.stars/tsconfig.app.json`, which a normal `pnpm install`
   creates as a side effect but a `--ignore-scripts` install does not. Run
   `pnpm exec stars prepare` first (CI does this before `pnpm prisma:generate` in
-  `continuous-integration.yml`)
+  `continuous-integration.yml`, and the Dockerfile's builder stage does the
+  same before its own `prisma:generate`/`build`)
 - **Prisma types stale:** Run `pnpm prisma:generate` after schema changes
 - **Command not appearing:** Commands auto-register on startup via
   `@wolfstar/shared-http-pieces`; check Discord developer portal

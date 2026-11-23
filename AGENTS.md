@@ -19,7 +19,8 @@ when the schema changes).
 - Guild limit defaults and ranges: `src/lib/common/limits.ts`
   (`LimitDefinitions`)
 - Plans produced by **prometheus** are stored under `.atlas/plans/`.
-- Conventional Commits are required.
+- Conventional Commits are required; PR titles are linted by CI with a sticky
+  comment on failures.
 
 ## Cursor Cloud specific instructions
 

@@ -34,7 +34,7 @@
 		"@discordjs/collection": "^2.1.1",
 		"@prisma/adapter-pg": "^7.10.1",
 		"@prisma/client": "^7.10.1",
-		"@sapphire/result": "^2.8.0",
+		"@sapphire/result": "^3.0.0",
 		"@sapphire/utilities": "^3.18.3",
 		"@wolfstar/env-utilities": "^2.3.1",
 		"@wolfstar/http-framework": "^6.5.1",
